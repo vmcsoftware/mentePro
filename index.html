@@ -211,25 +211,25 @@
     <script>
         // Aguardar carregamento do Firebase antes de inicializar
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM carregado, inicializando Firebase...');
+            console.log('DOM carregado, inicializando sistema...');
             
-            // Aguardar inicialização do Firebase
+            // Aguardar inicialização do Firebase com timeout mais longo
             const waitForFirebase = setInterval(() => {
-                if (window.firebaseConfig) {
+                if (window.firebaseConfig && window.firebaseConfig.isInitialized) {
                     clearInterval(waitForFirebase);
-                    console.log('Firebase Config carregado, inicializando sistema...');
+                    console.log('Firebase inicializado, configurando sistema...');
                     initializeApp();
                 }
-            }, 100);
+            }, 500);
             
-            // Timeout de segurança (10 segundos)
+            // Timeout de segurança (15 segundos)
             setTimeout(() => {
                 clearInterval(waitForFirebase);
-                if (!window.firebaseConfig) {
-                    console.warn('Firebase não foi carregado, usando modo demo');
+                if (!window.firebaseConfig || !window.firebaseConfig.isInitialized) {
+                    console.warn('Firebase não foi carregado a tempo, usando modo demo');
                     initializeApp();
                 }
-            }, 10000);
+            }, 15000);
         });
 
         function initializeApp() {
@@ -252,8 +252,72 @@
                 });
             }
 
+            // Configurar botão do Google
+            const googleLoginBtn = document.getElementById('googleLoginBtn');
+            if (googleLoginBtn) {
+                googleLoginBtn.addEventListener('click', handleGoogleLogin);
+            }
+
+            // Inicializar o AuthManager se disponível
+            if (typeof AuthManager !== 'undefined') {
+                console.log('Inicializando AuthManager...');
+                window.authManager = new AuthManager();
+            }
+
             // Verificar se já existe um usuário logado
             checkExistingAuth();
+        }
+
+        async function handleGoogleLogin() {
+            const googleBtn = document.getElementById('googleLoginBtn');
+            const originalText = googleBtn.innerHTML;
+            
+            try {
+                // Mostrar loading
+                googleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+                googleBtn.disabled = true;
+
+                if (window.firebaseConfig && window.firebaseConfig.isInitialized) {
+                    console.log('✅ Tentando login com Google via Firebase...');
+                    const result = await window.firebaseConfig.signInWithGoogle();
+                    
+                    if (result && result.user) {
+                        showAlert('Login com Google realizado com sucesso!', 'success');
+                        showWelcomeSection();
+                        showUserInfo(result.user);
+                        
+                        // Salvar usuário na sessão
+                        sessionStorage.setItem('mentePro_currentUser', JSON.stringify(result.user));
+                    }
+                } else {
+                    console.log('⚠️ Firebase não disponível, usando modo demo...');
+                    // Simular login demo com visual melhor
+                    showAlert('Conectando com Google... (Modo Demo)', 'info');
+                    
+                    setTimeout(() => {
+                        const demoUser = {
+                            uid: 'demo-google-user',
+                            email: 'usuario@gmail.com',
+                            displayName: 'Usuário Google (Demo)',
+                            photoURL: 'https://via.placeholder.com/40x40?text=G'
+                        };
+                        
+                        showAlert('Login com Google realizado! (Modo Demo)', 'success');
+                        showWelcomeSection();
+                        showUserInfo(demoUser);
+                        
+                        // Salvar usuário na sessão
+                        sessionStorage.setItem('mentePro_currentUser', JSON.stringify(demoUser));
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('Erro no login com Google:', error);
+                showAlert(error.message || 'Erro ao fazer login com Google', 'error');
+            } finally {
+                // Restaurar botão
+                googleBtn.innerHTML = originalText;
+                googleBtn.disabled = false;
+            }
         }
 
         function checkExistingAuth() {
@@ -267,7 +331,7 @@
             }
 
             // Se Firebase estiver disponível, verificar estado de auth
-            if (window.firebaseConfig && window.firebaseConfig.isInitialized) {
+            if (window.firebaseConfig && window.firebaseConfig.isInitialized && window.firebaseConfig.auth) {
                 const currentUser = window.firebaseConfig.auth.currentUser;
                 if (currentUser) {
                     showWelcomeSection();
