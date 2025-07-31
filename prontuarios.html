@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prontuários - MentePro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-brand">
+                <h1>MentePro</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="pacientes.html">Pacientes</a></li>
+                <li><a href="agendamentos.html">Agendamentos</a></li>
+                <li><a href="pagamentos.html">Pagamentos</a></li>
+                <li><a href="prontuarios.html" class="active">Prontuários</a></li>
+                <li><a href="#" id="logoutBtn">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Gestão de Prontuários</h2>
+            
+            <!-- Filtros e Busca -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3>Buscar Prontuários</h3>
+                </div>
+                <div class="search-filters">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="searchPatient">Paciente</label>
+                            <select id="searchPatient">
+                                <option value="">Selecione um paciente</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterDateStart">Data Início</label>
+                            <input type="date" id="filterDateStart">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterDateEnd">Data Fim</label>
+                            <input type="date" id="filterDateEnd">
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" id="searchRecordsBtn">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informações do Paciente Selecionado -->
+            <div id="patientInfoCard" class="section-card" style="display: none;">
+                <div class="section-header">
+                    <h3>Informações do Paciente</h3>
+                    <button class="btn btn-success" id="newRecordBtn">
+                        <i class="fas fa-plus"></i> Nova Sessão
+                    </button>
+                </div>
+                <div class="patient-summary">
+                    <div class="patient-basic-info">
+                        <div class="patient-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="patient-details">
+                            <h4 id="patientName">Nome do Paciente</h4>
+                            <p id="patientAge">Idade: --</p>
+                            <p id="patientCondition">Condição: --</p>
+                            <p id="patientStartDate">Início do tratamento: --</p>
+                        </div>
+                    </div>
+                    <div class="treatment-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="totalSessions">0</span>
+                            <span class="stat-label">Sessões</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="lastSession">--</span>
+                            <span class="stat-label">Última Sessão</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="treatmentProgress">--</span>
+                            <span class="stat-label">Progresso</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Sessões -->
+            <div id="sessionsListCard" class="section-card" style="display: none;">
+                <div class="section-header">
+                    <h3>Histórico de Sessões</h3>
+                    <div class="session-filters">
+                        <select id="filterSessionType">
+                            <option value="">Todos os tipos</option>
+                            <option value="individual">Individual</option>
+                            <option value="grupo">Grupo</option>
+                            <option value="avaliacao">Avaliação</option>
+                            <option value="retorno">Retorno</option>
+                        </select>
+                        <input type="text" id="searchSession" placeholder="Buscar nas anotações...">
+                    </div>
+                </div>
+                
+                <div class="sessions-timeline" id="sessionsTimeline">
+                    <!-- Sessões serão carregadas aqui -->
+                </div>
+            </div>
+
+            <!-- Evolução e Gráficos -->
+            <div id="progressCard" class="section-card" style="display: none;">
+                <div class="section-header">
+                    <h3>Evolução do Tratamento</h3>
+                    <div class="progress-controls">
+                        <select id="progressMetric">
+                            <option value="mood">Humor</option>
+                            <option value="anxiety">Ansiedade</option>
+                            <option value="progress">Progresso Geral</option>
+                            <option value="medication">Adesão Medicamentosa</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="progress-chart">
+                    <canvas id="progressChart" width="400" height="200"></canvas>
+                </div>
+                
+                <div class="progress-summary">
+                    <div class="progress-item">
+                        <span class="label">Melhoria geral:</span>
+                        <span class="value" id="overallImprovement">--</span>
+                    </div>
+                    <div class="progress-item">
+                        <span class="label">Tendência:</span>
+                        <span class="value" id="progressTrend">--</span>
+                    </div>
+                    <div class="progress-item">
+                        <span class="label">Próxima meta:</span>
+                        <span class="value" id="nextGoal">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para Nova Sessão -->
+    <div id="newSessionModal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3>Nova Sessão</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="newSessionForm">
+                    <input type="hidden" id="sessionPatientId">
+                    
+                    <!-- Informações Básicas -->
+                    <div class="form-section">
+                        <h4>Informações da Sessão</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="sessionDate">Data da Sessão</label>
+                                <input type="date" id="sessionDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sessionTime">Horário</label>
+                                <input type="time" id="sessionTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sessionType">Tipo de Sessão</label>
+                                <select id="sessionType" required>
+                                    <option value="">Selecione</option>
+                                    <option value="individual">Individual</option>
+                                    <option value="grupo">Grupo</option>
+                                    <option value="avaliacao">Avaliação</option>
+                                    <option value="retorno">Retorno</option>
+                                    <option value="emergencia">Emergência</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sessionDuration">Duração (min)</label>
+                                <input type="number" id="sessionDuration" value="50" min="15" max="180">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estado do Paciente -->
+                    <div class="form-section">
+                        <h4>Estado do Paciente</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="moodLevel">Humor (1-10)</label>
+                                <div class="rating-slider">
+                                    <input type="range" id="moodLevel" min="1" max="10" value="5">
+                                    <span class="rating-value">5</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="anxietyLevel">Ansiedade (1-10)</label>
+                                <div class="rating-slider">
+                                    <input type="range" id="anxietyLevel" min="1" max="10" value="5">
+                                    <span class="rating-value">5</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="progressLevel">Progresso (1-10)</label>
+                                <div class="rating-slider">
+                                    <input type="range" id="progressLevel" min="1" max="10" value="5">
+                                    <span class="rating-value">5</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observações Clínicas -->
+                    <div class="form-section">
+                        <h4>Observações Clínicas</h4>
+                        <div class="form-group">
+                            <label for="sessionObjectives">Objetivos da Sessão</label>
+                            <textarea id="sessionObjectives" rows="2" placeholder="Quais foram os objetivos trabalhados nesta sessão?"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="sessionNotes">Anotações da Sessão</label>
+                            <textarea id="sessionNotes" rows="4" placeholder="Descreva o que foi trabalhado, técnicas utilizadas, reações do paciente..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="patientBehavior">Comportamento Observado</label>
+                            <textarea id="patientBehavior" rows="3" placeholder="Como o paciente se apresentou? Mudanças no comportamento, humor, etc."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Técnicas e Intervenções -->
+                    <div class="form-section">
+                        <h4>Técnicas e Intervenções</h4>
+                        <div class="form-group">
+                            <label for="techniques">Técnicas Utilizadas</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" value="tcc"> Terapia Cognitivo-Comportamental</label>
+                                <label><input type="checkbox" value="mindfulness"> Mindfulness</label>
+                                <label><input type="checkbox" value="relaxamento"> Técnicas de Relaxamento</label>
+                                <label><input type="checkbox" value="exposicao"> Terapia de Exposição</label>
+                                <label><input type="checkbox" value="emdr"> EMDR</label>
+                                <label><input type="checkbox" value="gestalt"> Gestalt</label>
+                                <label><input type="checkbox" value="humanista"> Abordagem Humanista</label>
+                                <label><input type="checkbox" value="sistemica"> Terapia Sistêmica</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="interventions">Intervenções Específicas</label>
+                            <textarea id="interventions" rows="3" placeholder="Descreva as intervenções específicas realizadas..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Medicação e Recomendações -->
+                    <div class="form-section">
+                        <h4>Medicação e Recomendações</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="medicationAdherence">Adesão Medicamentosa (1-10)</label>
+                                <div class="rating-slider">
+                                    <input type="range" id="medicationAdherence" min="1" max="10" value="5">
+                                    <span class="rating-value">5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="medicationNotes">Observações sobre Medicação</label>
+                            <textarea id="medicationNotes" rows="2" placeholder="Efeitos colaterais, mudanças na medicação, etc."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="homework">Tarefas para Casa</label>
+                            <textarea id="homework" rows="3" placeholder="Exercícios, atividades ou tarefas recomendadas para o período entre sessões..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Planejamento -->
+                    <div class="form-section">
+                        <h4>Planejamento</h4>
+                        <div class="form-group">
+                            <label for="nextSessionPlan">Plano para Próxima Sessão</label>
+                            <textarea id="nextSessionPlan" rows="3" placeholder="O que será trabalhado na próxima sessão?"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="treatmentGoals">Metas do Tratamento</label>
+                            <textarea id="treatmentGoals" rows="2" placeholder="Metas de curto e longo prazo..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Anexos e Observações Adicionais -->
+                    <div class="form-section">
+                        <h4>Informações Adicionais</h4>
+                        <div class="form-group">
+                            <label for="additionalNotes">Observações Adicionais</label>
+                            <textarea id="additionalNotes" rows="3" placeholder="Outras informações relevantes..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="sessionTags">Tags</label>
+                            <input type="text" id="sessionTags" placeholder="Ex: ansiedade, progresso, resistência (separadas por vírgula)">
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Salvar Sessão
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Visualizar Sessão -->
+    <div id="viewSessionModal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3>Detalhes da Sessão</h3>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-primary" id="editSessionBtn">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <span class="close-modal">&times;</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="sessionDetails">
+                    <!-- Detalhes da sessão serão carregados aqui -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/prontuario.js"></script>
+</body>
+</html>

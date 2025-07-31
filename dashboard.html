@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - mentePro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Estilos específicos do Dashboard */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .date-filter {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .date-filter select,
+        .date-filter input {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .stat-card.patients::before { background: #667eea; }
+        .stat-card.appointments::before { background: #2ecc71; }
+        .stat-card.revenue::before { background: #f39c12; }
+        .stat-card.satisfaction::before { background: #e74c3c; }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-icon.patients { background: #667eea; }
+        .stat-icon.appointments { background: #2ecc71; }
+        .stat-icon.revenue { background: #f39c12; }
+        .stat-icon.satisfaction { background: #e74c3c; }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .stat-change.positive {
+            color: #2ecc71;
+        }
+
+        .stat-change.negative {
+            color: #e74c3c;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .recent-activities {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.new-patient { background: #667eea; }
+        .activity-icon.appointment { background: #2ecc71; }
+        .activity-icon.payment { background: #f39c12; }
+        .activity-icon.session { background: #9b59b6; }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .upcoming-appointments {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .appointment-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .appointment-time {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 60px;
+        }
+
+        .appointment-details {
+            flex: 1;
+        }
+
+        .appointment-patient {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .appointment-type {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .appointment-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .appointment-status.confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .appointment-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .quick-actions-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .quick-action-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .quick-action-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .dashboard-title {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .date-filter {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <img src="assets/logo.png" alt="MentePro Logo" class="logo-img">
+                <h1>mentePro</h1>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    Início
+                </a>
+                <a href="dashboard.html" class="nav-link active">
+                    <i class="fas fa-chart-dashboard"></i>
+                    Dashboard
+                </a>
+                <a href="pacientes.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    Pacientes
+                </a>
+                <a href="agendamentos.html" class="nav-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    Agendamentos
+                </a>
+                <a href="pagamentos.html" class="nav-link">
+                    <i class="fas fa-money-bill-wave"></i>
+                    Pagamentos
+                </a>
+                <a href="prontuarios.html" class="nav-link">
+                    <i class="fas fa-file-medical"></i>
+                    Prontuários
+                </a>
+                <a href="novo_paciente.html" class="nav-link">
+                    <i class="fas fa-user-plus"></i>
+                    Novo Paciente
+                </a>
+            </nav>
+            <div class="user-section">
+                <div class="user-info" id="userInfo">
+                    <span id="userName">Carregando...</span>
+                    <button id="logoutBtn" class="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="dashboard-container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>
+                        <i class="fas fa-chart-dashboard"></i>
+                        Dashboard
+                    </h1>
+                    <div class="date-filter">
+                        <label for="periodSelect">Período:</label>
+                        <select id="periodSelect">
+                            <option value="today">Hoje</option>
+                            <option value="week" selected>Esta Semana</option>
+                            <option value="month">Este Mês</option>
+                            <option value="quarter">Trimestre</option>
+                            <option value="year">Ano</option>
+                            <option value="custom">Personalizado</option>
+                        </select>
+                        <input type="date" id="startDate" style="display: none;">
+                        <input type="date" id="endDate" style="display: none;">
+                    </div>
+                </div>
+                <p id="lastUpdate">Última atualização: <span id="updateTime"></span></p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card patients">
+                    <div class="stat-header">
+                        <div class="stat-icon patients">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalPatients">127</div>
+                    <div class="stat-label">Total de Pacientes</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12 este mês</span>
+                    </div>
+                </div>
+
+                <div class="stat-card appointments">
+                    <div class="stat-header">
+                        <div class="stat-icon appointments">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalAppointments">89</div>
+                    <div class="stat-label">Consultas esta Semana</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+5% vs semana anterior</span>
+                    </div>
+                </div>
+
+                <div class="stat-card revenue">
+                    <div class="stat-header">
+                        <div class="stat-icon revenue">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalRevenue">R$ 45.800</div>
+                    <div class="stat-label">Receita do Mês</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8% vs mês anterior</span>
+                    </div>
+                </div>
+
+                <div class="stat-card satisfaction">
+                    <div class="stat-header">
+                        <div class="stat-icon satisfaction">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="satisfaction">4.8</div>
+                    <div class="stat-label">Satisfação Média</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+0.2 pontos</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Consultas nos Últimos 30 Dias</h3>
+                    </div>
+                    <canvas id="appointmentsChart" width="400" height="200"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Tipos de Terapia</h3>
+                    </div>
+                    <canvas id="therapyTypesChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Info Cards -->
+            <div class="info-cards">
+                <!-- Recent Activities -->
+                <div class="recent-activities">
+                    <h3 class="chart-title" style="margin-bottom: 1.5rem;">
+                        <i class="fas fa-clock"></i>
+                        Atividades Recentes
+                    </h3>
+                    <div id="recentActivities">
+                        <div class="activity-item">
+                            <div class="activity-icon new-patient">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Novo paciente cadastrado</div>
+                                <div class="activity-time">Ana Silva - há 2 horas</div>
+                            </div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-icon appointment">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Consulta confirmada</div>
+                                <div class="activity-time">João Santos - há 3 horas</div>
+                            </div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-icon session">
+                                <i class="fas fa-notes-medical"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Sessão concluída</div>
+                                <div class="activity-time">Maria Oliveira - há 4 horas</div>
+                            </div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-icon payment">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Pagamento recebido</div>
+                                <div class="activity-time">Carlos Silva - há 5 horas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Appointments -->
+                <div class="upcoming-appointments">
+                    <h3 class="chart-title" style="margin-bottom: 1.5rem;">
+                        <i class="fas fa-calendar-alt"></i>
+                        Próximas Consultas
+                    </h3>
+                    <div id="upcomingAppointments">
+                        <div class="appointment-item">
+                            <div class="appointment-time">09:00</div>
+                            <div class="appointment-details">
+                                <div class="appointment-patient">Pedro Silva</div>
+                                <div class="appointment-type">Terapia Cognitiva</div>
+                            </div>
+                            <div class="appointment-status confirmed">Confirmada</div>
+                        </div>
+
+                        <div class="appointment-item">
+                            <div class="appointment-time">10:30</div>
+                            <div class="appointment-details">
+                                <div class="appointment-patient">Ana Costa</div>
+                                <div class="appointment-type">Avaliação Inicial</div>
+                            </div>
+                            <div class="appointment-status pending">Pendente</div>
+                        </div>
+
+                        <div class="appointment-item">
+                            <div class="appointment-time">14:00</div>
+                            <div class="appointment-details">
+                                <div class="appointment-patient">João Santos</div>
+                                <div class="appointment-type">Terapia de Casal</div>
+                            </div>
+                            <div class="appointment-status confirmed">Confirmada</div>
+                        </div>
+
+                        <div class="appointment-item">
+                            <div class="appointment-time">15:30</div>
+                            <div class="appointment-details">
+                                <div class="appointment-patient">Maria Oliveira</div>
+                                <div class="appointment-type">Terapia Individual</div>
+                            </div>
+                            <div class="appointment-status confirmed">Confirmada</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions-dashboard">
+                <a href="novo_paciente.html" class="quick-action-card">
+                    <div class="quick-action-icon" style="background: #667eea;">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h4>Novo Paciente</h4>
+                    <p>Cadastrar novo paciente</p>
+                </a>
+
+                <a href="pacientes.html" class="quick-action-card">
+                    <div class="quick-action-icon" style="background: #2ecc71;">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4>Buscar Paciente</h4>
+                    <p>Localizar paciente existente</p>
+                </a>
+
+                <a href="#" class="quick-action-card">
+                    <div class="quick-action-icon" style="background: #f39c12;">
+                        <i class="fas fa-calendar-plus"></i>
+                    </div>
+                    <h4>Agendar Consulta</h4>
+                    <p>Nova consulta</p>
+                </a>
+
+                <a href="#" class="quick-action-card">
+                    <div class="quick-action-icon" style="background: #9b59b6;">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <h4>Relatórios</h4>
+                    <p>Gerar relatórios</p>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2025 mentePro. Todos os direitos reservados.</p>
+            <div class="footer-links">
+                <a href="#">Política de Privacidade</a>
+                <a href="#">Termos de Uso</a>
+                <a href="#">Suporte</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Verificar autenticação
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simular verificação de auth - substituir por auth real
+            const currentUser = sessionStorage.getItem('mentePro_currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const user = JSON.parse(currentUser);
+            document.getElementById('userName').textContent = user.email;
+            
+            // Atualizar timestamp
+            updateLastUpdateTime();
+            
+            // Inicializar gráficos
+            initializeCharts();
+            
+            // Configurar filtros
+            setupFilters();
+            
+            // Simular atualizações em tempo real
+            setInterval(updateDashboardData, 30000); // A cada 30 segundos
+        });
+
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('pt-BR');
+            document.getElementById('updateTime').textContent = timeString;
+        }
+
+        function setupFilters() {
+            const periodSelect = document.getElementById('periodSelect');
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+
+            periodSelect.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    startDate.style.display = 'block';
+                    endDate.style.display = 'block';
+                } else {
+                    startDate.style.display = 'none';
+                    endDate.style.display = 'none';
+                }
+                updateDashboardData();
+            });
+
+            startDate.addEventListener('change', updateDashboardData);
+            endDate.addEventListener('change', updateDashboardData);
+        }
+
+        function initializeCharts() {
+            // Gráfico de Consultas
+            const appointmentsCtx = document.getElementById('appointmentsChart').getContext('2d');
+            new Chart(appointmentsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['1', '5', '10', '15', '20', '25', '30'],
+                    datasets: [{
+                        label: 'Consultas',
+                        data: [12, 19, 15, 25, 22, 30, 28],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Tipos de Terapia
+            const therapyCtx = document.getElementById('therapyTypesChart').getContext('2d');
+            new Chart(therapyCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Terapia Individual', 'Terapia de Casal', 'Terapia Familiar', 'Avaliação'],
+                    datasets: [{
+                        data: [45, 25, 20, 10],
+                        backgroundColor: [
+                            '#667eea',
+                            '#2ecc71',
+                            '#f39c12',
+                            '#e74c3c'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateDashboardData() {
+            // Simular atualização de dados baseada no período selecionado
+            const period = document.getElementById('periodSelect').value;
+            
+            // Aqui você integraria com sua API/Firebase para buscar dados reais
+            console.log('Atualizando dados para o período:', period);
+            
+            // Simular pequenas variações nos números
+            const basePatients = 127;
+            const baseAppointments = 89;
+            const baseRevenue = 45800;
+            const baseSatisfaction = 4.8;
+            
+            const variation = (Math.random() - 0.5) * 0.1; // ±5% de variação
+            
+            document.getElementById('totalPatients').textContent = Math.round(basePatients * (1 + variation));
+            document.getElementById('totalAppointments').textContent = Math.round(baseAppointments * (1 + variation));
+            document.getElementById('totalRevenue').textContent = 'R$ ' + Math.round(baseRevenue * (1 + variation)).toLocaleString('pt-BR');
+            document.getElementById('satisfaction').textContent = (baseSatisfaction * (1 + variation * 0.1)).toFixed(1);
+            
+            updateLastUpdateTime();
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            sessionStorage.removeItem('mentePro_currentUser');
+            localStorage.removeItem('mentePro_session');
+            window.location.href = 'index.html';
+        });
+
+        // Simular notificações em tempo real
+        function showNotification(message, type = 'info') {
+            // Criar elemento de notificação
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                border-left: 4px solid #667eea;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        // Simular algumas notificações
+        setTimeout(() => {
+            showNotification('Nova consulta agendada para amanhã às 10:00');
+        }, 5000);
+
+        setTimeout(() => {
+            showNotification('Lembrete: Reunião de equipe em 30 minutos');
+        }, 15000);
+    </script>
+
+    <style>
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .nav-link.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamentos - MentePro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-brand">
+                <h1>MentePro</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="pacientes.html">Pacientes</a></li>
+                <li><a href="agendamentos.html">Agendamentos</a></li>
+                <li><a href="pagamentos.html" class="active">Pagamentos</a></li>
+                <li><a href="prontuarios.html">Prontuários</a></li>
+                <li><a href="#" id="logoutBtn">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Gestão de Pagamentos</h2>
+            
+            <!-- Resumo Financeiro -->
+            <div class="financial-summary">
+                <div class="summary-card">
+                    <div class="card-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Receita do Mês</h3>
+                        <p class="amount" id="monthlyRevenue">R$ 0,00</p>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Pendentes</h3>
+                        <p class="amount" id="pendingPayments">R$ 0,00</p>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Recebidos</h3>
+                        <p class="amount" id="receivedPayments">R$ 0,00</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configurações de Valores -->
+            <div class="section-card">
+                <h3>Configurações de Valores de Consulta</h3>
+                <div class="consultation-fees">
+                    <form id="consultationFeesForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="consultationPrice">Valor da Consulta Padrão</label>
+                                <input type="number" id="consultationPrice" step="0.01" placeholder="150.00" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="returnPrice">Valor da Consulta de Retorno</label>
+                                <input type="number" id="returnPrice" step="0.01" placeholder="120.00" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="groupPrice">Valor da Terapia em Grupo</label>
+                                <input type="number" id="groupPrice" step="0.01" placeholder="80.00" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="onlinePrice">Valor da Consulta Online</label>
+                                <input type="number" id="onlinePrice" step="0.01" placeholder="130.00" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Salvar Configurações
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Registrar Pagamento -->
+            <div class="section-card">
+                <h3>Registrar Pagamento</h3>
+                <form id="paymentForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="paymentPatient">Paciente</label>
+                            <select id="paymentPatient" required>
+                                <option value="">Selecione um paciente</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentAppointment">Consulta</label>
+                            <select id="paymentAppointment" required>
+                                <option value="">Selecione uma consulta</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="paymentAmount">Valor</label>
+                            <input type="number" id="paymentAmount" step="0.01" placeholder="150.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentMethod">Método de Pagamento</label>
+                            <select id="paymentMethod" required>
+                                <option value="">Selecione o método</option>
+                                <option value="dinheiro">Dinheiro</option>
+                                <option value="pix">PIX</option>
+                                <option value="cartao-debito">Cartão de Débito</option>
+                                <option value="cartao-credito">Cartão de Crédito</option>
+                                <option value="transferencia">Transferência Bancária</option>
+                                <option value="cheque">Cheque</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="paymentDate">Data do Pagamento</label>
+                            <input type="date" id="paymentDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentStatus">Status</label>
+                            <select id="paymentStatus" required>
+                                <option value="paid">Pago</option>
+                                <option value="partial">Parcial</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentNotes">Observações</label>
+                        <textarea id="paymentNotes" rows="3" placeholder="Observações sobre o pagamento..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Registrar Pagamento
+                    </button>
+                </form>
+            </div>
+
+            <!-- Lista de Pagamentos -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3>Histórico de Pagamentos</h3>
+                    <div class="filter-controls">
+                        <select id="filterStatus">
+                            <option value="">Todos os Status</option>
+                            <option value="paid">Pago</option>
+                            <option value="pending">Pendente</option>
+                            <option value="partial">Parcial</option>
+                        </select>
+                        <select id="filterMonth">
+                            <option value="">Todos os Meses</option>
+                        </select>
+                        <input type="text" id="searchPayment" placeholder="Buscar paciente...">
+                    </div>
+                </div>
+                
+                <div class="payments-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Paciente</th>
+                                <th>Tipo de Consulta</th>
+                                <th>Valor</th>
+                                <th>Método</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsTableBody">
+                            <!-- Pagamentos serão carregados aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Relatórios -->
+            <div class="section-card">
+                <h3>Relatórios Financeiros</h3>
+                <div class="reports-controls">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reportStartDate">Data Início</label>
+                            <input type="date" id="reportStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="reportEndDate">Data Fim</label>
+                            <input type="date" id="reportEndDate">
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" id="generateReportBtn">
+                                <i class="fas fa-chart-bar"></i> Gerar Relatório
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="reportResults" class="report-results" style="display: none;">
+                    <div class="report-summary">
+                        <div class="report-item">
+                            <span class="label">Total Recebido:</span>
+                            <span class="value" id="reportTotalReceived">R$ 0,00</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="label">Total Pendente:</span>
+                            <span class="value" id="reportTotalPending">R$ 0,00</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="label">Número de Consultas:</span>
+                            <span class="value" id="reportTotalAppointments">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-methods-breakdown">
+                        <h4>Métodos de Pagamento</h4>
+                        <div id="paymentMethodsChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para Editar Pagamento -->
+    <div id="editPaymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Editar Pagamento</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editPaymentForm">
+                    <input type="hidden" id="editPaymentId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editPaymentAmount">Valor</label>
+                            <input type="number" id="editPaymentAmount" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPaymentMethod">Método de Pagamento</label>
+                            <select id="editPaymentMethod" required>
+                                <option value="dinheiro">Dinheiro</option>
+                                <option value="pix">PIX</option>
+                                <option value="cartao-debito">Cartão de Débito</option>
+                                <option value="cartao-credito">Cartão de Crédito</option>
+                                <option value="transferencia">Transferência Bancária</option>
+                                <option value="cheque">Cheque</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editPaymentDate">Data do Pagamento</label>
+                            <input type="date" id="editPaymentDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPaymentStatus">Status</label>
+                            <select id="editPaymentStatus" required>
+                                <option value="paid">Pago</option>
+                                <option value="partial">Parcial</option>
+                                <option value="pending">Pendente</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPaymentNotes">Observações</label>
+                        <textarea id="editPaymentNotes" rows="3"></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/pagamento.js"></script>
+</body>
+</html>
