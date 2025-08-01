@@ -6,6 +6,275 @@
     <title>Prontuários - MentePro</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Estilos específicos para prontuários */
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .anamnesis-modal .modal-content {
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .anamnesis-form {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .form-section h4 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-section h4 i {
+            color: #667eea;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-grid.two-columns {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .form-grid.three-columns {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .form-group textarea.large {
+            min-height: 100px;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .intensity-scale {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e1e5e9;
+            margin-bottom: 0.5rem;
+        }
+
+        .intensity-scale label {
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .intensity-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .phase-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1.5rem 0 1rem 0;
+            text-align: center;
+        }
+
+        .phase-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 2rem auto 0;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .progress-step.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .progress-step.active .step-number,
+        .progress-step.completed .step-number {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid.two-columns,
+            .form-grid.three-columns {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+            }
+            
+            .intensity-scale {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -62,9 +331,14 @@
             <div id="patientInfoCard" class="section-card" style="display: none;">
                 <div class="section-header">
                     <h3>Informações do Paciente</h3>
-                    <button class="btn btn-success" id="newRecordBtn">
-                        <i class="fas fa-plus"></i> Nova Sessão
-                    </button>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="generateRecordBtn">
+                            <i class="fas fa-file-medical"></i> Gerar Prontuário
+                        </button>
+                        <button class="btn btn-success" id="newRecordBtn">
+                            <i class="fas fa-plus"></i> Nova Sessão
+                        </button>
+                    </div>
                 </div>
                 <div class="patient-summary">
                     <div class="patient-basic-info">
@@ -339,12 +613,1854 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <!-- Modal para Gerar Prontuário com Anamnese -->
+    <div id="anamnesisModal" class="modal anamnesis-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-medical"></i> Gerar Prontuário - Anamnese Completa</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <!-- Indicador de progresso -->
+                <div class="progress-indicator">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Dados Pessoais</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Vida Pessoal</div>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Mental</div>
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Infância</div>
+                    </div>
+                    <div class="progress-step" data-step="5">
+                        <div class="step-number">5</div>
+                        <div class="step-label">Emocional</div>
+                    </div>
+                </div>
+
+                <form id="anamnesisForm" class="anamnesis-form">
+                    <input type="hidden" id="anamnesisPatientId">
+                    
+                    <!-- Dados Pessoais -->
+                    <div class="form-section" data-section="1">
+                        <h4><i class="fas fa-user"></i> Dados Pessoais</h4>
+                        
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="anamnesis_name">Nome:</label>
+                                <input type="text" id="anamnesis_name" name="name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_rg">RG:</label>
+                                <input type="text" id="anamnesis_rg" name="rg">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_cpf">CPF:</label>
+                                <input type="text" id="anamnesis_cpf" name="cpf">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_birth_date">Data de nascimento:</label>
+                                <input type="date" id="anamnesis_birth_date" name="birth_date">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_marital_status">Estado Civil:</label>
+                                <select id="anamnesis_marital_status" name="marital_status">
+                                    <option value="">Selecione...</option>
+                                    <option value="solteiro">Solteiro(a)</option>
+                                    <option value="casado">Casado(a)</option>
+                                    <option value="divorciado">Divorciado(a)</option>
+                                    <option value="viuvo">Viúvo(a)</option>
+                                    <option value="uniao_estavel">União Estável</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="anamnesis_address">Endereço:</label>
+                                <input type="text" id="anamnesis_address" name="address">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_cep">CEP:</label>
+                                <input type="text" id="anamnesis_cep" name="cep">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_complement">Complemento:</label>
+                                <input type="text" id="anamnesis_complement" name="complement">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_neighborhood">Bairro:</label>
+                                <input type="text" id="anamnesis_neighborhood" name="neighborhood">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_city">Cidade:</label>
+                                <input type="text" id="anamnesis_city" name="city">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_uf">UF:</label>
+                                <select id="anamnesis_uf" name="uf">
+                                    <option value="">Selecione...</option>
+                                    <option value="AC">AC</option>
+                                    <option value="AL">AL</option>
+                                    <option value="AP">AP</option>
+                                    <option value="AM">AM</option>
+                                    <option value="BA">BA</option>
+                                    <option value="CE">CE</option>
+                                    <option value="DF">DF</option>
+                                    <option value="ES">ES</option>
+                                    <option value="GO">GO</option>
+                                    <option value="MA">MA</option>
+                                    <option value="MT">MT</option>
+                                    <option value="MS">MS</option>
+                                    <option value="MG">MG</option>
+                                    <option value="PA">PA</option>
+                                    <option value="PB">PB</option>
+                                    <option value="PR">PR</option>
+                                    <option value="PE">PE</option>
+                                    <option value="PI">PI</option>
+                                    <option value="RJ">RJ</option>
+                                    <option value="RN">RN</option>
+                                    <option value="RS">RS</option>
+                                    <option value="RO">RO</option>
+                                    <option value="RR">RR</option>
+                                    <option value="SC">SC</option>
+                                    <option value="SP">SP</option>
+                                    <option value="SE">SE</option>
+                                    <option value="TO">TO</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_phone_home">Telefone Residencial:</label>
+                                <input type="tel" id="anamnesis_phone_home" name="phone_home">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_phone_mobile">Celular:</label>
+                                <input type="tel" id="anamnesis_phone_mobile" name="phone_mobile">
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="anamnesis_email">E-mail:</label>
+                                <input type="email" id="anamnesis_email" name="email">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_profession">Profissão:</label>
+                                <input type="text" id="anamnesis_profession" name="profession">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_company">Empresa:</label>
+                                <input type="text" id="anamnesis_company" name="company">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_activity">Atividade:</label>
+                                <input type="text" id="anamnesis_activity" name="activity">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_position">Cargo:</label>
+                                <input type="text" id="anamnesis_position" name="position">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_religion">Religião:</label>
+                                <input type="text" id="anamnesis_religion" name="religion">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="anamnesis_education">Escolaridade:</label>
+                                <select id="anamnesis_education" name="education">
+                                    <option value="">Selecione...</option>
+                                    <option value="fundamental_incompleto">Fundamental Incompleto</option>
+                                    <option value="fundamental_completo">Fundamental Completo</option>
+                                    <option value="medio_incompleto">Médio Incompleto</option>
+                                    <option value="medio_completo">Médio Completo</option>
+                                    <option value="superior_incompleto">Superior Incompleto</option>
+                                    <option value="superior_completo">Superior Completo</option>
+                                    <option value="pos_graduacao">Pós-graduação</option>
+                                    <option value="mestrado">Mestrado</option>
+                                    <option value="doutorado">Doutorado</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="anamnesis_main_complaint">Queixa Principal – O que te trouxe até aqui?</label>
+                            <textarea id="anamnesis_main_complaint" name="main_complaint" class="large" placeholder="Descreva detalhadamente..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="phase-header">
+                        <h3>Fase 01 – Vida Pessoal</h3>
+                    </div>
+
+                    <!-- Fase 01 - Vida Pessoal -->
+                    <div class="form-section" data-section="2">
+                        <h4><i class="fas fa-heart"></i> Relacionamentos e Vida Pessoal</h4>
+                        
+                        <div class="form-group">
+                            <label>É casada(o), solteira(o) ou divorciada(o)?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="relationship_married" name="relationship_status" value="casado">
+                                    <label for="relationship_married">Casado(a)</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="relationship_single" name="relationship_status" value="solteiro">
+                                    <label for="relationship_single">Solteiro(a)</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="relationship_divorced" name="relationship_status" value="divorciado">
+                                    <label for="relationship_divorced">Divorciado(a)</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="divorce_reason">Se é divorciada(o), por qual motivo e como se sente?</label>
+                            <textarea id="divorce_reason" name="divorce_reason"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="number_children">Número de filhos:</label>
+                            <input type="number" id="number_children" name="number_children" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="relationship_children">Como é o seu relacionamento com seus filhos?</label>
+                            <textarea id="relationship_children" name="relationship_children"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="relationship_partner">Como você se sente em seu relacionamento com sua parceira(o)?</label>
+                            <textarea id="relationship_partner" name="relationship_partner"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="feeling_home">Como você se sente em sua casa, dentro do contexto familiar?</label>
+                            <textarea id="feeling_home" name="feeling_home"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="feeling_work">Como você se sente no seu trabalho?</label>
+                            <textarea id="feeling_work" name="feeling_work"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Você se sente pertencendo ao Contexto Familiar?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="family_context_yes" name="family_context" value="sim">
+                                    <label for="family_context_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="family_context_no" name="family_context" value="nao">
+                                    <label for="family_context_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="family_context_why" placeholder="Por quê?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Você se sente pertencendo ao Contexto Social?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="social_context_yes" name="social_context" value="sim">
+                                    <label for="social_context_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="social_context_no" name="social_context" value="nao">
+                                    <label for="social_context_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="social_context_why" placeholder="Por quê?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Você se sente pertencendo ao Contexto Religioso?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="religious_context_yes" name="religious_context" value="sim">
+                                    <label for="religious_context_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="religious_context_no" name="religious_context" value="nao">
+                                    <label for="religious_context_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="religious_context_why" placeholder="Por quê?"></textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>Você sente frustração em relação a:</label>
+                            <div class="form-grid two-columns">
+                                <div class="form-group">
+                                    <label for="frustration_parents">Pais?</label>
+                                    <textarea id="frustration_parents" name="frustration_parents"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="frustration_siblings">Irmãos?</label>
+                                    <textarea id="frustration_siblings" name="frustration_siblings"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="frustration_children">Filhos?</label>
+                                    <textarea id="frustration_children" name="frustration_children"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="frustration_profession">Profissão?</label>
+                                    <textarea id="frustration_profession" name="frustration_profession"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="frustration_school">Colégio?</label>
+                                    <textarea id="frustration_school" name="frustration_school"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="frustration_spouse">Cônjuge?</label>
+                                    <textarea id="frustration_spouse" name="frustration_spouse"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="frustration_sexual_identity">Identidade Sexual?</label>
+                                    <textarea id="frustration_sexual_identity" name="frustration_sexual_identity"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="frustration_sexual_life">Vida Sexual?</label>
+                                    <textarea id="frustration_sexual_life" name="frustration_sexual_life"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="frustration_why">Por quê?</label>
+                                <textarea id="frustration_why" name="frustration_why"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Continuação Fase 01 - Sexualidade -->
+                    <div class="form-section" data-section="2">
+                        <h4><i class="fas fa-venus-mars"></i> Sexualidade</h4>
+                        
+                        <div class="form-group">
+                            <label for="sexuality_start_age">Iniciou sua sexualidade com que idade?</label>
+                            <input type="number" id="sexuality_start_age" name="sexuality_start_age" min="0" max="100">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Como foi sua primeira vez?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="first_time_traumatic" name="first_time" value="traumatica">
+                                    <label for="first_time_traumatic">Traumática</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="first_time_normal" name="first_time" value="normal">
+                                    <label for="first_time_normal">Normal</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="first_time_good" name="first_time" value="boa">
+                                    <label for="first_time_good">Boa</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="first_time_satisfactory" name="first_time" value="satisfatoria">
+                                    <label for="first_time_satisfactory">Satisfatória</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sexual_problems">Tem tido algum problema em relação ao sexo?</label>
+                            <textarea id="sexual_problems" name="sexual_problems"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Atualmente sempre se realiza nas relações sexuais?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="sexual_satisfaction_yes" name="sexual_satisfaction" value="sim">
+                                    <label for="sexual_satisfaction_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="sexual_satisfaction_no" name="sexual_satisfaction" value="nao">
+                                    <label for="sexual_satisfaction_no">Não</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>O sexo para você é algo:</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="sex_importance_important" name="sex_importance" value="importante">
+                                    <label for="sex_importance_important">Importante</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="sex_importance_unimportant" name="sex_importance" value="sem_importancia">
+                                    <label for="sex_importance_unimportant">Sem importância</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="sex_importance_very_important" name="sex_importance" value="muito_importante">
+                                    <label for="sex_importance_very_important">Muito importante</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Continuação Fase 01 - Saúde e Comportamento -->
+                    <div class="form-section" data-section="2">
+                        <h4><i class="fas fa-heartbeat"></i> Saúde e Comportamento</h4>
+                        
+                        <div class="form-grid two-columns">
+                            <div class="form-group">
+                                <label>Algum trauma?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="trauma_yes" name="trauma" value="sim">
+                                        <label for="trauma_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="trauma_no" name="trauma" value="nao">
+                                        <label for="trauma_no">Não</label>
+                                    </div>
+                                </div>
+                                <input type="text" name="trauma_description" placeholder="Qual?">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Alguma fobia?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="phobia_yes" name="phobia" value="sim">
+                                        <label for="phobia_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="phobia_no" name="phobia" value="nao">
+                                        <label for="phobia_no">Não</label>
+                                    </div>
+                                </div>
+                                <input type="text" name="phobia_description" placeholder="Qual?">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Tem medo de alguma coisa?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="fear_yes" name="fear" value="sim">
+                                        <label for="fear_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="fear_no" name="fear" value="nao">
+                                        <label for="fear_no">Não</label>
+                                    </div>
+                                </div>
+                                <input type="text" name="fear_description" placeholder="De quê?">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Usa drogas?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="drugs_yes" name="drugs" value="sim">
+                                        <label for="drugs_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="drugs_no" name="drugs" value="nao">
+                                        <label for="drugs_no">Não</label>
+                                    </div>
+                                </div>
+                                <input type="text" name="drugs_description" placeholder="Quais?">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Dores de cabeça?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="headache_yes" name="headache" value="sim">
+                                        <label for="headache_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="headache_no" name="headache" value="nao">
+                                        <label for="headache_no">Não</label>
+                                    </div>
+                                </div>
+                                <input type="text" name="headache_frequency" placeholder="Com que frequência?">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Insônia?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="insomnia_yes" name="insomnia" value="sim">
+                                        <label for="insomnia_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="insomnia_no" name="insomnia" value="nao">
+                                        <label for="insomnia_no">Não</label>
+                                    </div>
+                                </div>
+                                <input type="text" name="insomnia_frequency" placeholder="Com que frequência?">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Tem ideias suicidas?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="suicidal_yes" name="suicidal" value="sim">
+                                        <label for="suicidal_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="suicidal_no" name="suicidal" value="nao">
+                                        <label for="suicidal_no">Não</label>
+                                    </div>
+                                </div>
+                                <textarea name="suicidal_description" placeholder="Quais?"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Usa bebidas alcoólicas?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="alcohol_yes" name="alcohol" value="sim">
+                                        <label for="alcohol_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="alcohol_no" name="alcohol" value="nao">
+                                        <label for="alcohol_no">Não</label>
+                                    </div>
+                                </div>
+                                <input type="text" name="alcohol_frequency" placeholder="Com que frequência?">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>É fumante?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="smoker_yes" name="smoker" value="sim">
+                                        <label for="smoker_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="smoker_no" name="smoker" value="nao">
+                                        <label for="smoker_no">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Está grávida?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="pregnant_yes" name="pregnant" value="sim">
+                                        <label for="pregnant_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="pregnant_no" name="pregnant" value="nao">
+                                        <label for="pregnant_no">Não</label>
+                                    </div>
+                                </div>
+                                <input type="number" name="pregnancy_weeks" placeholder="Quantas semanas?">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Qual o seu nível de stress?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="stress_high" name="stress_level" value="alto">
+                                        <label for="stress_high">Alto</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="stress_medium" name="stress_level" value="medio">
+                                        <label for="stress_medium">Médio</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="stress_low" name="stress_level" value="baixo">
+                                        <label for="stress_low">Baixo</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Atualmente está tomando alguma medicação?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="medication_yes" name="medication" value="sim">
+                                        <label for="medication_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="medication_no" name="medication" value="nao">
+                                        <label for="medication_no">Não</label>
+                                    </div>
+                                </div>
+                                <input type="text" name="medication_description" placeholder="Qual?">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Já consultou algum tipo de psiquiatra ou psicólogo?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="therapy_yes" name="therapy" value="sim">
+                                        <label for="therapy_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="therapy_no" name="therapy" value="nao">
+                                        <label for="therapy_no">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Se sim, foi diagnosticada(o)?</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="diagnosis_yes" name="diagnosis" value="sim">
+                                        <label for="diagnosis_yes">Sim</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="diagnosis_no" name="diagnosis" value="nao">
+                                        <label for="diagnosis_no">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="friends_quantity">Qual a quantidade de amigos que você tem?</label>
+                                <input type="number" id="friends_quantity" name="friends_quantity" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="hobby">Qual seu passatempo preferido?</label>
+                                <input type="text" id="hobby" name="hobby">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="people_belief">Qual a principal crença que as pessoas possuem em relação a você que mais se repete?</label>
+                            <textarea id="people_belief" name="people_belief"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Você se considera feliz?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="happy_yes" name="happy" value="sim">
+                                    <label for="happy_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="happy_no" name="happy" value="nao">
+                                    <label for="happy_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="happy_why" placeholder="Por quê?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="would_change">Se você pudesse mudar alguma coisa em você, no seu modo de ser, ou agir, ou no seu comportamento atual, o que mudaria?</label>
+                            <textarea id="would_change" name="would_change"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="life_definition">Defina o que é a vida em apenas uma frase</label>
+                            <textarea id="life_definition" name="life_definition"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="phase-header">
+                        <h3>Fase 02 – Mental</h3>
+                    </div>
+
+                    <!-- Fase 02 - Mental -->
+                    <div class="form-section" data-section="3">
+                        <h4><i class="fas fa-brain"></i> Padrões de Pensamento</h4>
+                        
+                        <div class="form-group">
+                            <label>Quais são os tipos de pensamentos que você costuma alimentar em relação a si mesma(o), de uma maneira geral?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_general_positive" name="thoughts_general" value="positivos">
+                                    <label for="thoughts_general_positive">Positivos</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_general_negative" name="thoughts_general" value="negativos">
+                                    <label for="thoughts_general_negative">Negativos</label>
+                                </div>
+                            </div>
+                            <textarea name="thoughts_general_description" placeholder="Quais exatamente?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Em relação a sua aparência física?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_appearance_positive" name="thoughts_appearance" value="positivos">
+                                    <label for="thoughts_appearance_positive">Positivos</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_appearance_negative" name="thoughts_appearance" value="negativos">
+                                    <label for="thoughts_appearance_negative">Negativos</label>
+                                </div>
+                            </div>
+                            <textarea name="thoughts_appearance_description" placeholder="Quais exatamente?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Em relação a sua competência profissional?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_professional_positive" name="thoughts_professional" value="positivos">
+                                    <label for="thoughts_professional_positive">Positivos</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_professional_negative" name="thoughts_professional" value="negativos">
+                                    <label for="thoughts_professional_negative">Negativos</label>
+                                </div>
+                            </div>
+                            <textarea name="thoughts_professional_description" placeholder="Quais exatamente?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Em relação a sua vida emocional?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_emotional_positive" name="thoughts_emotional" value="positivos">
+                                    <label for="thoughts_emotional_positive">Positivos</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_emotional_negative" name="thoughts_emotional" value="negativos">
+                                    <label for="thoughts_emotional_negative">Negativos</label>
+                                </div>
+                            </div>
+                            <textarea name="thoughts_emotional_description" placeholder="Quais exatamente?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Em relação a sua vida sexual?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_sexual_positive" name="thoughts_sexual" value="positivos">
+                                    <label for="thoughts_sexual_positive">Positivos</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_sexual_negative" name="thoughts_sexual" value="negativos">
+                                    <label for="thoughts_sexual_negative">Negativos</label>
+                                </div>
+                            </div>
+                            <textarea name="thoughts_sexual_description" placeholder="Quais exatamente?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Em relação ao seu passado?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_past_positive" name="thoughts_past" value="positivos">
+                                    <label for="thoughts_past_positive">Positivos</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_past_negative" name="thoughts_past" value="negativos">
+                                    <label for="thoughts_past_negative">Negativos</label>
+                                </div>
+                            </div>
+                            <textarea name="thoughts_past_description" placeholder="Quais exatamente?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Em relação ao seu futuro?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_future_positive" name="thoughts_future" value="positivos">
+                                    <label for="thoughts_future_positive">Positivos</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="thoughts_future_negative" name="thoughts_future" value="negativos">
+                                    <label for="thoughts_future_negative">Negativos</label>
+                                </div>
+                            </div>
+                            <textarea name="thoughts_future_description" placeholder="Quais exatamente?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="self_vision">Qual sua visão sobre você?</label>
+                            <textarea id="self_vision" name="self_vision"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="phase-header">
+                        <h3>Fase 03 – Infância</h3>
+                    </div>
+
+                    <!-- Fase 03 - Infância -->
+                    <div class="form-section" data-section="4">
+                        <h4><i class="fas fa-baby"></i> História Familiar e Infância</h4>
+                        
+                        <div class="form-group">
+                            <label>Você foi criado pelos pais?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="raised_by_parents_yes" name="raised_by_parents" value="sim">
+                                    <label for="raised_by_parents_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="raised_by_parents_no" name="raised_by_parents" value="nao">
+                                    <label for="raised_by_parents_no">Não</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="relationship_father">Como é sua relação com seu pai?</label>
+                            <textarea id="relationship_father" name="relationship_father"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="relationship_mother">Como é sua relação com sua mãe?</label>
+                            <textarea id="relationship_mother" name="relationship_mother"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Seus pais foram agressivos com você?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="parents_aggressive_yes" name="parents_aggressive" value="sim">
+                                    <label for="parents_aggressive_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="parents_aggressive_no" name="parents_aggressive" value="nao">
+                                    <label for="parents_aggressive_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="parents_aggressive_description" placeholder="Descreva..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Qual deles era o mais bravo?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="more_angry_father" name="more_angry" value="pai">
+                                    <label for="more_angry_father">O Pai</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="more_angry_mother" name="more_angry" value="mae">
+                                    <label for="more_angry_mother">A Mãe</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Usavam bebidas ou drogas?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="parents_substances_yes" name="parents_substances" value="sim">
+                                    <label for="parents_substances_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="parents_substances_no" name="parents_substances" value="nao">
+                                    <label for="parents_substances_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="parents_substances_description" placeholder="Descreva..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Como você descreveria o relacionamento entre seus pais?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="parents_relationship_excellent" name="parents_relationship" value="excelente">
+                                    <label for="parents_relationship_excellent">Excelente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="parents_relationship_very_good" name="parents_relationship" value="muito_bom">
+                                    <label for="parents_relationship_very_good">Muito Bom</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="parents_relationship_good" name="parents_relationship" value="bom">
+                                    <label for="parents_relationship_good">Bom</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="parents_relationship_regular" name="parents_relationship" value="regular">
+                                    <label for="parents_relationship_regular">Regular</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="parents_relationship_terrible" name="parents_relationship" value="pessimo">
+                                    <label for="parents_relationship_terrible">Péssimo</label>
+                                </div>
+                            </div>
+                            <textarea name="parents_relationship_why" placeholder="Por quê?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="relationship_patterns_similar">Quais os aspectos deste relacionamento que se assemelham, ou se repetem em sua vida hoje?</label>
+                            <textarea id="relationship_patterns_similar" name="relationship_patterns_similar"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="relationship_patterns_avoid">Quais as características deste relacionamento, que você se mantém determinada(o) a não repetir?</label>
+                            <textarea id="relationship_patterns_avoid" name="relationship_patterns_avoid"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="relationship_patterns_why">Por quê?</label>
+                            <textarea id="relationship_patterns_why" name="relationship_patterns_why"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="relationship_belief">Quanto ao relacionamento de seus pais responda: Qual a crença que você adquiriu em relação a relacionamentos?</label>
+                            <textarea id="relationship_belief" name="relationship_belief"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Na infância, era obrigada(o) a fazer alguma coisa que lhe desagradava?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="childhood_forced_yes" name="childhood_forced" value="sim">
+                                    <label for="childhood_forced_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="childhood_forced_no" name="childhood_forced" value="nao">
+                                    <label for="childhood_forced_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="childhood_forced_description" placeholder="Descreva..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Lembra-se, de alguma coisa que o magoou muito na Infância?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="childhood_hurt_yes" name="childhood_hurt" value="sim">
+                                    <label for="childhood_hurt_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="childhood_hurt_no" name="childhood_hurt" value="nao">
+                                    <label for="childhood_hurt_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="childhood_hurt_description" placeholder="Descreva..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Teve perdas familiares ou de amigos na Infância?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="childhood_losses_yes" name="childhood_losses" value="sim">
+                                    <label for="childhood_losses_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="childhood_losses_no" name="childhood_losses" value="nao">
+                                    <label for="childhood_losses_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="childhood_losses_description" placeholder="Descreva..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="past_sadness">O que te faz sentir tristeza ao relembrar do passado?</label>
+                            <textarea id="past_sadness" name="past_sadness"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="childhood_fears">Quando criança tinha medo de que?</label>
+                            <textarea id="childhood_fears" name="childhood_fears"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Dormia com a luz acesa ou apagada?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="sleep_light_on" name="sleep_light" value="acesa">
+                                    <label for="sleep_light_on">Acesa</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="sleep_light_off" name="sleep_light" value="apagada">
+                                    <label for="sleep_light_off">Apagada</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Como foi sua adolescência?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="adolescence_bad" name="adolescence" value="ruim">
+                                    <label for="adolescence_bad">Ruim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="adolescence_good" name="adolescence" value="boa">
+                                    <label for="adolescence_good">Boa</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="adolescence_great" name="adolescence" value="otima">
+                                    <label for="adolescence_great">Ótima</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Teve fase de rebeldia na adolescência?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="rebellion_yes" name="rebellion" value="sim">
+                                    <label for="rebellion_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="rebellion_no" name="rebellion" value="nao">
+                                    <label for="rebellion_no">Não</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Com qual de seus pais você tinha mais dificuldade de relacionamento?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="difficulty_father" name="difficulty_parent" value="pai">
+                                    <label for="difficulty_father">Pai</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="difficulty_mother" name="difficulty_parent" value="mae">
+                                    <label for="difficulty_mother">Mãe</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="difficulty_both" name="difficulty_parent" value="ambos">
+                                    <label for="difficulty_both">Ambos</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="family_philosophy_success">Qual a Filosofia de sua família em relação ao sucesso profissional?</label>
+                            <textarea id="family_philosophy_success" name="family_philosophy_success"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="family_philosophy_money">Ao dinheiro?</label>
+                            <textarea id="family_philosophy_money" name="family_philosophy_money"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="family_philosophy_love">Ao amor?</label>
+                            <textarea id="family_philosophy_love" name="family_philosophy_love"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="family_philosophy_sex">Ao sexo?</label>
+                            <textarea id="family_philosophy_sex" name="family_philosophy_sex"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="good_child">O que era para você, ser uma boa(bom) menina(o)? Descreva.</label>
+                            <textarea id="good_child" name="good_child"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="to_be_loved">Como você deveria agir, ou ser para ser amada(o)?</label>
+                            <textarea id="to_be_loved" name="to_be_loved"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Possui irmãos?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="siblings_no" name="siblings" value="nao">
+                                    <label for="siblings_no">Não</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="siblings_yes" name="siblings" value="sim">
+                                    <label for="siblings_yes">Sim</label>
+                                </div>
+                            </div>
+                            <input type="number" name="siblings_quantity" placeholder="Quantos?" min="0">
+                            <textarea name="siblings_relationship" placeholder="Como é sua relação com eles?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Você foi uma criança introvertida ou extrovertida?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="personality_introverted" name="child_personality" value="introvertida">
+                                    <label for="personality_introverted">Introvertida</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="personality_extroverted" name="child_personality" value="extrovertida">
+                                    <label for="personality_extroverted">Extrovertida</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="school_relationships">Havia dificuldades de relacionamentos com os colegas do colégio? Se sim, cite-os.</label>
+                            <textarea id="school_relationships" name="school_relationships"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="childhood_fears_list">Quais eram seus maiores medos na infância?</label>
+                            <textarea id="childhood_fears_list" name="childhood_fears_list"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="childhood_memorable_fact">Relate algum fato marcante em sua infância</label>
+                            <textarea id="childhood_memorable_fact" name="childhood_memorable_fact"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="phase-header">
+                        <h3>Fase 04 – Emocional</h3>
+                    </div>
+
+                    <!-- Fase 04 - Emocional -->
+                    <div class="form-section" data-section="5">
+                        <h4><i class="fas fa-heart"></i> Perfil Emocional Atual</h4>
+                        
+                        <div class="form-group">
+                            <label for="current_fears">Quais são seus maiores medos hoje?</label>
+                            <textarea id="current_fears" name="current_fears"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="self_thoughts">O que você pensa a seu respeito?</label>
+                            <textarea id="self_thoughts" name="self_thoughts"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="first_relationship">Como foi o seu primeiro relacionamento amoroso?</label>
+                            <textarea id="first_relationship" name="first_relationship"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Se você avaliasse sua atuação na vida, qual papel que mais caberia a você hoje?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="role_victim" name="life_role" value="vitima">
+                                    <label for="role_victim">Vítima</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="role_responsible" name="life_role" value="responsavel">
+                                    <label for="role_responsible">Responsável</label>
+                                </div>
+                            </div>
+                            <input type="text" name="secondary_gain" placeholder="Qual o ganho secundário?">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="victim_situations">Em quais situações você desempenha o papel de vítima?</label>
+                            <textarea id="victim_situations" name="victim_situations"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="responsible_situations">Em quais situações você desempenha o papel de responsável?</label>
+                            <textarea id="responsible_situations" name="responsible_situations"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Se considera vitoriosa(o) ou derrotada(o)?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="feels_victorious" name="self_perception" value="vitoriosa">
+                                    <label for="feels_victorious">Vitoriosa(o)</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="feels_defeated" name="self_perception" value="derrotada">
+                                    <label for="feels_defeated">Derrotada(o)</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Nos relacionamentos e na vida, você prefere ser:</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="prefers_dominant" name="relationship_preference" value="dominante">
+                                    <label for="prefers_dominant">Dominante</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="prefers_submissive" name="relationship_preference" value="submisso">
+                                    <label for="prefers_submissive">Submisso</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="blame_others">Quem deve ser punido por problemas que ocorrem com você? OU Quem é o culpado por seus problemas pessoais?</label>
+                            <textarea id="blame_others" name="blame_others"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Sente raiva ou rancor de alguém?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="anger_no" name="anger" value="nao">
+                                    <label for="anger_no">Não</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="anger_yes" name="anger" value="sim">
+                                    <label for="anger_yes">Sim</label>
+                                </div>
+                            </div>
+                            <input type="text" name="anger_who" placeholder="Quem?">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Sente-se de alguma forma pressionada(o) na atualidade?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="pressure_yes" name="pressure" value="sim">
+                                    <label for="pressure_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="pressure_no" name="pressure" value="nao">
+                                    <label for="pressure_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="pressure_description" placeholder="De que maneira?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Você se acha uma pessoa controladora?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="controlling_yes" name="controlling" value="sim">
+                                    <label for="controlling_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="controlling_no" name="controlling" value="nao">
+                                    <label for="controlling_no">Não</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Sente-se de alguma forma inferior aos outros?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="inferior_yes" name="inferior" value="sim">
+                                    <label for="inferior_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="inferior_no" name="inferior" value="nao">
+                                    <label for="inferior_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="inferior_why" placeholder="Por quê?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Duvida de sua própria capacidade?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="doubt_capacity_yes" name="doubt_capacity" value="sim">
+                                    <label for="doubt_capacity_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="doubt_capacity_no" name="doubt_capacity" value="nao">
+                                    <label for="doubt_capacity_no">Não</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Você é audaciosa(o), corre atrás de suas metas, ou é auto protetor(a), preferindo se poupar dos eventuais riscos?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="behavior_audacious" name="behavior_type" value="audaciosa">
+                                    <label for="behavior_audacious">Audaciosa(o)</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="behavior_protective" name="behavior_type" value="auto_protetora">
+                                    <label for="behavior_protective">Auto protetor(a)</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Existe algo que a(o) faz sentir-se culpada(o)?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="guilt_yes" name="guilt" value="sim">
+                                    <label for="guilt_yes">Sim</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="guilt_no" name="guilt" value="nao">
+                                    <label for="guilt_no">Não</label>
+                                </div>
+                            </div>
+                            <textarea name="guilt_description" placeholder="O que exatamente?"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Escala de Sentimentos -->
+                    <div class="form-section" data-section="5">
+                        <h4><i class="fas fa-chart-line"></i> Escala de Sentimentos</h4>
+                        <p style="margin-bottom: 1rem; color: #666; font-size: 0.9rem;">
+                            <strong>Instruções:</strong> Para cada sentimento listado abaixo, indique a intensidade que você experimenta atualmente em sua vida.
+                        </p>
+                        
+                        <div id="feelingsScale">
+                            <!-- Os sentimentos serão gerados dinamicamente pelo JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Navegação entre seções -->
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" id="prevSection" style="display: none;">
+                            <i class="fas fa-arrow-left"></i> Anterior
+                        </button>
+                        <button type="button" class="btn btn-primary" id="nextSection">
+                            Próximo <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button type="submit" class="btn btn-success" id="submitAnamnesis" style="display: none;">
+                            <i class="fas fa-save"></i> Gerar Prontuário
+                        </button>
+                        <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/prontuario.js"></script>
+    <script>
+        // Script para controle da anamnese
+        document.addEventListener('DOMContentLoaded', function() {
+            // Variáveis globais
+            let currentSection = 1;
+            const totalSections = 5;
+            
+            // Elementos do DOM
+            const anamnesisModal = document.getElementById('anamnesisModal');
+            const generateRecordBtn = document.getElementById('generateRecordBtn');
+            const anamnesisForm = document.getElementById('anamnesisForm');
+            const prevSectionBtn = document.getElementById('prevSection');
+            const nextSectionBtn = document.getElementById('nextSection');
+            const submitAnamnesisBtn = document.getElementById('submitAnamnesis');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
+            
+            // Lista de sentimentos para a escala
+            const feelings = [
+                'Raiva', 'Medo de algo concreto', 'Medos vagos', 'Culpa', 'Revolta',
+                'Medo de perder o controle', 'Tristeza', 'Mágoa', 'Orgulho', 'Ódio',
+                'Egoísmo', 'Ansiedade', 'Intolerância', 'Submissão', 'Indecisão',
+                'Desespero', 'Desânimo', 'Covardia', 'Egocentrismo', 'Ciúme',
+                'Frustração', 'Nostalgia', 'Cansaço', 'Impaciência', 'Angústia',
+                'Timidez', 'Apatia', 'Ressentimento', 'Solidão', 'Autoritarismo'
+            ];
+            
+            // Inicializar
+            if (generateRecordBtn) {
+                generateRecordBtn.addEventListener('click', openAnamnesisModal);
+            }
+            
+            // Event listeners para navegação
+            if (prevSectionBtn) {
+                prevSectionBtn.addEventListener('click', () => navigateSection(-1));
+            }
+            
+            if (nextSectionBtn) {
+                nextSectionBtn.addEventListener('click', () => navigateSection(1));
+            }
+            
+            if (submitAnamnesisBtn) {
+                submitAnamnesisBtn.addEventListener('click', submitAnamnesis);
+            }
+            
+            // Fechar modal
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', closeAnamnesisModal);
+            });
+            
+            // Fechar modal clicando fora
+            if (anamnesisModal) {
+                anamnesisModal.addEventListener('click', function(e) {
+                    if (e.target === anamnesisModal) {
+                        closeAnamnesisModal();
+                    }
+                });
+            }
+            
+            // Gerar escala de sentimentos
+            generateFeelingsScale();
+            
+            // Configurar máscaras
+            setupAnamnesisInputMasks();
+            
+            // Configurar busca de CEP
+            setupAnamnesisAddressSearch();
+            
+            // Abrir modal de anamnese
+            function openAnamnesisModal() {
+                const selectedPatient = document.getElementById('searchPatient').value;
+                if (!selectedPatient) {
+                    alert('Por favor, selecione um paciente primeiro.');
+                    return;
+                }
+                
+                // Pré-preencher dados do paciente se disponível
+                prefillPatientData(selectedPatient);
+                
+                currentSection = 1;
+                showSection(currentSection);
+                updateProgressIndicator();
+                anamnesisModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+            
+            // Fechar modal
+            function closeAnamnesisModal() {
+                anamnesisModal.style.display = 'none';
+                document.body.style.overflow = '';
+                currentSection = 1;
+                anamnesisForm.reset();
+            }
+            
+            // Navegar entre seções
+            function navigateSection(direction) {
+                const newSection = currentSection + direction;
+                
+                if (newSection < 1 || newSection > totalSections) return;
+                
+                // Validar seção atual antes de avançar
+                if (direction > 0 && !validateCurrentSection()) {
+                    alert('Por favor, preencha todos os campos obrigatórios antes de continuar.');
+                    return;
+                }
+                
+                currentSection = newSection;
+                showSection(currentSection);
+                updateProgressIndicator();
+            }
+            
+            // Mostrar seção específica
+            function showSection(sectionNumber) {
+                // Esconder todas as seções
+                const sections = document.querySelectorAll('.form-section[data-section]');
+                sections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Mostrar seções da fase atual
+                const currentSections = document.querySelectorAll(`[data-section="${sectionNumber}"]`);
+                currentSections.forEach(section => {
+                    section.style.display = 'block';
+                });
+                
+                // Atualizar botões de navegação
+                prevSectionBtn.style.display = sectionNumber === 1 ? 'none' : 'inline-flex';
+                nextSectionBtn.style.display = sectionNumber === totalSections ? 'none' : 'inline-flex';
+                submitAnamnesisBtn.style.display = sectionNumber === totalSections ? 'inline-flex' : 'none';
+                
+                // Scroll para o topo
+                document.querySelector('.modal-body').scrollTop = 0;
+            }
+            
+            // Atualizar indicador de progresso
+            function updateProgressIndicator() {
+                const steps = document.querySelectorAll('.progress-step');
+                steps.forEach((step, index) => {
+                    const stepNumber = index + 1;
+                    step.classList.remove('active', 'completed');
+                    
+                    if (stepNumber < currentSection) {
+                        step.classList.add('completed');
+                    } else if (stepNumber === currentSection) {
+                        step.classList.add('active');
+                    }
+                });
+            }
+            
+            // Validar seção atual
+            function validateCurrentSection() {
+                const currentSections = document.querySelectorAll(`[data-section="${currentSection}"]`);
+                let isValid = true;
+                
+                currentSections.forEach(section => {
+                    const requiredFields = section.querySelectorAll('[required]');
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            field.style.borderColor = '#e74c3c';
+                            isValid = false;
+                        } else {
+                            field.style.borderColor = '#e1e5e9';
+                        }
+                    });
+                });
+                
+                return isValid;
+            }
+            
+            // Gerar escala de sentimentos
+            function generateFeelingsScale() {
+                const container = document.getElementById('feelingsScale');
+                if (!container) return;
+                
+                feelings.forEach(feeling => {
+                    const feelingElement = document.createElement('div');
+                    feelingElement.className = 'intensity-scale';
+                    feelingElement.innerHTML = `
+                        <label>${feeling}</label>
+                        <div class="intensity-option">
+                            <input type="radio" name="feeling_${feeling.toLowerCase().replace(/\s+/g, '_')}" value="muita" id="${feeling}_muita">
+                            <label for="${feeling}_muita">Muita</label>
+                        </div>
+                        <div class="intensity-option">
+                            <input type="radio" name="feeling_${feeling.toLowerCase().replace(/\s+/g, '_')}" value="media" id="${feeling}_media">
+                            <label for="${feeling}_media">Média</label>
+                        </div>
+                        <div class="intensity-option">
+                            <input type="radio" name="feeling_${feeling.toLowerCase().replace(/\s+/g, '_')}" value="pouca" id="${feeling}_pouca">
+                            <label for="${feeling}_pouca">Pouca</label>
+                        </div>
+                    `;
+                    container.appendChild(feelingElement);
+                });
+            }
+            
+            // Configurar máscaras para inputs
+            function setupAnamnesisInputMasks() {
+                // Máscara para telefone
+                const phoneInputs = document.querySelectorAll('#anamnesisForm input[type="tel"]');
+                phoneInputs.forEach(input => {
+                    input.addEventListener('input', function() {
+                        let value = this.value.replace(/\D/g, '');
+                        if (value.length <= 11) {
+                            if (value.length === 11) {
+                                this.value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                            } else if (value.length === 10) {
+                                this.value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                            } else {
+                                this.value = value;
+                            }
+                        }
+                    });
+                });
+                
+                // Máscara para CPF
+                const cpfInput = document.getElementById('anamnesis_cpf');
+                if (cpfInput) {
+                    cpfInput.addEventListener('input', function() {
+                        let value = this.value.replace(/\D/g, '');
+                        if (value.length <= 11) {
+                            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                            this.value = value;
+                        }
+                    });
+                }
+                
+                // Máscara para RG
+                const rgInput = document.getElementById('anamnesis_rg');
+                if (rgInput) {
+                    rgInput.addEventListener('input', function() {
+                        let value = this.value.replace(/\D/g, '');
+                        if (value.length <= 9) {
+                            value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})/, '$1.$2.$3-$4');
+                            this.value = value;
+                        }
+                    });
+                }
+                
+                // Máscara para CEP
+                const cepInput = document.getElementById('anamnesis_cep');
+                if (cepInput) {
+                    cepInput.addEventListener('input', function() {
+                        let value = this.value.replace(/\D/g, '');
+                        if (value.length <= 8) {
+                            value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+                            this.value = value;
+                        }
+                    });
+                }
+            }
+            
+            // Configurar busca de endereço por CEP
+            function setupAnamnesisAddressSearch() {
+                const cepInput = document.getElementById('anamnesis_cep');
+                if (cepInput) {
+                    cepInput.addEventListener('blur', function() {
+                        const cep = this.value.replace(/\D/g, '');
+                        if (cep.length === 8) {
+                            searchAddressByCep(cep);
+                        }
+                    });
+                }
+            }
+            
+            // Buscar endereço por CEP
+            async function searchAddressByCep(cep) {
+                try {
+                    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                    const data = await response.json();
+                    
+                    if (!data.erro) {
+                        document.getElementById('anamnesis_address').value = data.logradouro || '';
+                        document.getElementById('anamnesis_neighborhood').value = data.bairro || '';
+                        document.getElementById('anamnesis_city').value = data.localidade || '';
+                        document.getElementById('anamnesis_uf').value = data.uf || '';
+                    }
+                } catch (error) {
+                    console.log('Erro ao buscar CEP:', error);
+                }
+            }
+            
+            // Pré-preencher dados do paciente
+            function prefillPatientData(patientId) {
+                // Buscar dados do paciente do localStorage ou Firebase
+                try {
+                    const patients = JSON.parse(localStorage.getItem('mentePro_patients') || '[]');
+                    const patient = patients.find(p => p.id === patientId);
+                    
+                    if (patient) {
+                        document.getElementById('anamnesis_name').value = patient.name || '';
+                        document.getElementById('anamnesis_cpf').value = patient.cpf || '';
+                        document.getElementById('anamnesis_birth_date').value = patient.birthDate || '';
+                        document.getElementById('anamnesis_address').value = patient.address || '';
+                        document.getElementById('anamnesis_cep').value = patient.cep || '';
+                        document.getElementById('anamnesis_neighborhood').value = patient.neighborhood || '';
+                        document.getElementById('anamnesis_city').value = patient.city || '';
+                        document.getElementById('anamnesis_uf').value = patient.state || '';
+                        document.getElementById('anamnesis_phone_mobile').value = patient.phone || '';
+                        document.getElementById('anamnesis_email').value = patient.email || '';
+                        document.getElementById('anamnesis_profession').value = patient.profession || '';
+                        document.getElementById('anamnesis_marital_status').value = patient.maritalStatus || '';
+                        document.getElementById('anamnesis_education').value = patient.education || '';
+                    }
+                    
+                    document.getElementById('anamnesisPatientId').value = patientId;
+                } catch (error) {
+                    console.log('Erro ao pré-preencher dados:', error);
+                }
+            }
+            
+            // Submeter anamnese
+            async function submitAnamnesis(e) {
+                e.preventDefault();
+                
+                if (!validateCurrentSection()) {
+                    alert('Por favor, preencha todos os campos obrigatórios.');
+                    return;
+                }
+                
+                try {
+                    // Mostrar loading
+                    submitAnamnesisBtn.disabled = true;
+                    submitAnamnesisBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
+                    
+                    // Coletar dados do formulário
+                    const formData = new FormData(anamnesisForm);
+                    const anamnesisData = {};
+                    
+                    for (let [key, value] of formData.entries()) {
+                        anamnesisData[key] = value.trim();
+                    }
+                    
+                    // Adicionar metadata
+                    anamnesisData.id = generateId();
+                    anamnesisData.patientId = document.getElementById('anamnesisPatientId').value;
+                    anamnesisData.createdAt = new Date().toISOString();
+                    anamnesisData.type = 'anamnesis';
+                    
+                    // Salvar anamnese
+                    await saveAnamnesis(anamnesisData);
+                    
+                    // Gerar documento de prontuário
+                    generateMedicalRecord(anamnesisData);
+                    
+                    alert('Prontuário gerado com sucesso!');
+                    closeAnamnesisModal();
+                    
+                } catch (error) {
+                    console.error('Erro ao gerar prontuário:', error);
+                    alert('Erro ao gerar prontuário. Tente novamente.');
+                } finally {
+                    // Restaurar botão
+                    submitAnamnesisBtn.disabled = false;
+                    submitAnamnesisBtn.innerHTML = '<i class="fas fa-save"></i> Gerar Prontuário';
+                }
+            }
+            
+            // Salvar anamnese
+            async function saveAnamnesis(data) {
+                try {
+                    // Tentar salvar no Firebase
+                    if (window.firebaseConfig && window.firebaseConfig.isInitialized) {
+                        await window.firebaseConfig.addDocument('anamnesis', data);
+                    } else {
+                        // Salvar localmente
+                        const anamnesis = JSON.parse(localStorage.getItem('mentePro_anamnesis') || '[]');
+                        anamnesis.push(data);
+                        localStorage.setItem('mentePro_anamnesis', JSON.stringify(anamnesis));
+                    }
+                } catch (error) {
+                    // Fallback para localStorage
+                    const anamnesis = JSON.parse(localStorage.getItem('mentePro_anamnesis') || '[]');
+                    anamnesis.push(data);
+                    localStorage.setItem('mentePro_anamnesis', JSON.stringify(anamnesis));
+                }
+            }
+            
+            // Gerar documento de prontuário
+            function generateMedicalRecord(data) {
+                // Criar janela para impressão/PDF
+                const printWindow = window.open('', '_blank', 'width=800,height=600');
+                const recordHtml = createMedicalRecordHTML(data);
+                
+                printWindow.document.write(recordHtml);
+                printWindow.document.close();
+                
+                // Aguardar carregamento e imprimir
+                setTimeout(() => {
+                    printWindow.print();
+                }, 500);
+            }
+            
+            // Criar HTML do prontuário médico
+            function createMedicalRecordHTML(data) {
+                const currentDate = new Date().toLocaleDateString('pt-BR');
+                
+                return `
+                <!DOCTYPE html>
+                <html lang="pt-BR">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Prontuário Médico - ${data.name}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.4; }
+                        .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+                        .section { margin-bottom: 20px; }
+                        .section-title { background: #f0f0f0; padding: 8px; font-weight: bold; margin-bottom: 10px; }
+                        .field { margin-bottom: 8px; }
+                        .field label { font-weight: bold; }
+                        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+                        .full-width { grid-column: 1 / -1; }
+                        @media print { body { margin: 0; } }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>PRONTUÁRIO MÉDICO - ANAMNESE</h1>
+                        <p><strong>mentePro - Sistema de Gestão Clínica</strong></p>
+                        <p>Data de geração: ${currentDate}</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">DADOS PESSOAIS</div>
+                        <div class="grid">
+                            <div class="field full-width"><label>Nome:</label> ${data.name || ''}</div>
+                            <div class="field"><label>RG:</label> ${data.rg || ''}</div>
+                            <div class="field"><label>CPF:</label> ${data.cpf || ''}</div>
+                            <div class="field"><label>Data de Nascimento:</label> ${data.birth_date ? new Date(data.birth_date).toLocaleDateString('pt-BR') : ''}</div>
+                            <div class="field"><label>Estado Civil:</label> ${data.marital_status || ''}</div>
+                            <div class="field full-width"><label>Endereço:</label> ${data.address || ''}</div>
+                            <div class="field"><label>CEP:</label> ${data.cep || ''}</div>
+                            <div class="field"><label>Bairro:</label> ${data.neighborhood || ''}</div>
+                            <div class="field"><label>Cidade:</label> ${data.city || ''}</div>
+                            <div class="field"><label>UF:</label> ${data.uf || ''}</div>
+                            <div class="field"><label>Telefone:</label> ${data.phone_home || ''}</div>
+                            <div class="field"><label>Celular:</label> ${data.phone_mobile || ''}</div>
+                            <div class="field"><label>E-mail:</label> ${data.email || ''}</div>
+                            <div class="field"><label>Profissão:</label> ${data.profession || ''}</div>
+                            <div class="field"><label>Empresa:</label> ${data.company || ''}</div>
+                            <div class="field"><label>Religião:</label> ${data.religion || ''}</div>
+                            <div class="field"><label>Escolaridade:</label> ${data.education || ''}</div>
+                        </div>
+                        <div class="field full-width">
+                            <label>Queixa Principal:</label><br>
+                            ${data.main_complaint || ''}
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">FASE 01 - VIDA PESSOAL</div>
+                        <div class="field"><label>Estado de Relacionamento:</label> ${data.relationship_status || ''}</div>
+                        <div class="field"><label>Número de filhos:</label> ${data.number_children || ''}</div>
+                        ${data.relationship_children ? `<div class="field"><label>Relacionamento com filhos:</label><br>${data.relationship_children}</div>` : ''}
+                        ${data.relationship_partner ? `<div class="field"><label>Relacionamento com parceiro(a):</label><br>${data.relationship_partner}</div>` : ''}
+                        ${data.feeling_home ? `<div class="field"><label>Sentimento em casa:</label><br>${data.feeling_home}</div>` : ''}
+                        ${data.feeling_work ? `<div class="field"><label>Sentimento no trabalho:</label><br>${data.feeling_work}</div>` : ''}
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">FASE 02 - MENTAL</div>
+                        ${Object.keys(data).filter(key => key.startsWith('thoughts_')).map(key => {
+                            const value = data[key];
+                            if (value && value !== '') {
+                                const label = key.replace('thoughts_', '').replace('_', ' ');
+                                return `<div class="field"><label>${label}:</label> ${value}</div>`;
+                            }
+                            return '';
+                        }).join('')}
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">FASE 03 - INFÂNCIA</div>
+                        ${Object.keys(data).filter(key => 
+                            key.includes('childhood') || key.includes('parents') || key.includes('family')
+                        ).map(key => {
+                            const value = data[key];
+                            if (value && value !== '') {
+                                const label = key.replace(/_/g, ' ');
+                                return `<div class="field"><label>${label}:</label> ${value}</div>`;
+                            }
+                            return '';
+                        }).join('')}
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">FASE 04 - EMOCIONAL</div>
+                        ${Object.keys(data).filter(key => 
+                            key.includes('current_') || key.includes('self_') || key.includes('life_')
+                        ).map(key => {
+                            const value = data[key];
+                            if (value && value !== '') {
+                                const label = key.replace(/_/g, ' ');
+                                return `<div class="field"><label>${label}:</label> ${value}</div>`;
+                            }
+                            return '';
+                        }).join('')}
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">ESCALA DE SENTIMENTOS</div>
+                        ${Object.keys(data).filter(key => key.startsWith('feeling_')).map(key => {
+                            const value = data[key];
+                            if (value && value !== '') {
+                                const feeling = key.replace('feeling_', '').replace(/_/g, ' ');
+                                return `<div class="field"><label>${feeling}:</label> ${value} intensidade</div>`;
+                            }
+                            return '';
+                        }).join('')}
+                    </div>
+                    
+                    <div style="margin-top: 40px; text-align: center; font-size: 12px; color: #666;">
+                        <p>Documento gerado automaticamente pelo sistema mentePro</p>
+                        <p>Data: ${currentDate} | ID: ${data.id}</p>
+                    </div>
+                </body>
+                </html>
+                `;
+            }
+            
+            // Gerar ID único
+            function generateId() {
+                return 'anamnesis_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+        });
+    </script>
 </body>
 </html>
