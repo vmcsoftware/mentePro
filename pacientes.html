@@ -40,7 +40,7 @@
         }
 
         .add-patient-btn {
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             padding: 1rem 1.5rem;
@@ -70,7 +70,7 @@
             padding: 1.5rem;
             border-radius: 12px;
             text-align: center;
-            border-left: 4px solid var(--primary-color);
+            border-left: 4px solid #667eea;
         }
 
         .stat-value {
@@ -110,7 +110,7 @@
 
         .search-box input:focus {
             outline: none;
-            border-color: var(--primary-color);
+            border-color: #667eea;
         }
 
         .search-box i {
@@ -166,7 +166,7 @@
             border-radius: 12px;
             padding: 1.5rem;
             transition: all 0.3s ease;
-            border-left: 4px solid var(--primary-color);
+            border-left: 4px solid #667eea;
         }
 
         .patient-card:hover {
@@ -185,7 +185,7 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -724,25 +724,14 @@
                 }
             });
 
-            // Inicializar PatientManager
-            initializePatientManager();
-        });
-
-        // Inicializar PatientManager
-        function initializePatientManager() {
-            // Aguardar que a classe PatientManager esteja disponível
-            if (typeof PatientManager !== 'undefined') {
-                window.patientManager = new PatientManager();
-                window.patientManager.init().then(() => {
+            // Aguardar inicialização do PatientManager
+            const checkPatientManager = setInterval(() => {
+                if (window.patientManager) {
+                    clearInterval(checkPatientManager);
                     console.log('PatientManager inicializado com sucesso');
-                }).catch(error => {
-                    console.error('Erro ao inicializar PatientManager:', error);
-                });
-            } else {
-                // Se não estiver disponível, tentar novamente em 100ms
-                setTimeout(initializePatientManager, 100);
-            }
-        }
+                }
+            }, 100);
+        });
 
         // Funções para o modal de paciente
         function viewPatient(patientId) {
@@ -754,31 +743,6 @@
         function editPatient(patientId) {
             // Redirecionar para página de edição com parâmetro
             window.location.href = `novo_paciente.html?edit=${patientId}`;
-        }
-
-        // Função para abrir anamnese com verificação
-        function openAnamnesis(patientId, patientName) {
-            if (window.patientManager && typeof window.patientManager.showAnamnesisModal === 'function') {
-                window.patientManager.showAnamnesisModal(patientId, patientName);
-            } else {
-                console.error('PatientManager não está inicializado ou método showAnamnesisModal não encontrado');
-                alert('Sistema de anamnese não está disponível. Recarregue a página e tente novamente.');
-            }
-        }
-
-        // Funções para fechar modais
-        function closeAnamnesisModal() {
-            const modal = document.querySelector('.modal-anamnesis');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        function closePhaseModal() {
-            const modal = document.getElementById('phaseFormModal');
-            if (modal) {
-                modal.remove();
-            }
         }
 
         function showPatientModal(patientId) {
