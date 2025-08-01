@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Pacientes - mentePro</title>
+    <title>Pacientes - mentePro</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilos específicos para a página de cadastro */
+        /* Estilos específicos para a página de pacientes */
         .patients-container {
-            max-width: 800px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -21,7 +21,13 @@
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
-            text-align: center;
+        }
+
+        .patients-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
         }
 
         .patients-title h1 {
@@ -30,144 +36,455 @@
             color: #333;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 0.5rem;
-            margin: 0;
         }
 
-        .subtitle {
-            color: #666;
-            margin-top: 0.5rem;
-            font-size: 1.1rem;
+        .add-patient-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.3s ease;
         }
 
-        .subtitle {
-            color: #666;
-            margin-top: 0.5rem;
-            font-size: 1.1rem;
+        .add-patient-btn:hover {
+            transform: translateY(-2px);
+            color: white;
         }
 
-        .form-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-grid {
+        .patients-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
+        .stat-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 4px solid #667eea;
         }
 
-        .form-group label {
-            font-weight: 600;
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
             color: #333;
             margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            padding: 1rem;
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .patients-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
             border: 2px solid #e1e5e9;
             border-radius: 12px;
             font-size: 1rem;
             transition: border-color 0.3s ease;
-            background: white;
         }
 
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+        .search-box input:focus {
             outline: none;
-            border-color: var(--primary-color);
+            border-color: #667eea;
         }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
         }
 
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-
-        .btn-primary,
-        .btn-secondary {
-            padding: 1rem 2rem;
-            border: none;
+        .filter-select {
+            padding: 1rem;
+            border: 2px solid #e1e5e9;
             border-radius: 12px;
             font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .export-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .export-btn:hover {
+            background: #27ae60;
+        }
+
+        .patients-content {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .patients-list {
+            display: grid;
+            gap: 1rem;
+            padding: 2rem;
+        }
+
+        .patient-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .patient-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .patient-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .patient-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .patient-info {
+            flex: 1;
+        }
+
+        .patient-name {
+            font-size: 1.25rem;
             font-weight: 600;
+            color: #333;
+            margin: 0 0 0.25rem 0;
+        }
+
+        .patient-email {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .patient-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .patient-status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .patient-status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .patient-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .detail-item i {
+            color: #667eea;
+            width: 16px;
+        }
+
+        .patient-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .btn-view,
+        .btn-edit,
+        .btn-delete {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
+            gap: 0.25rem;
         }
 
-        .btn-primary {
-            background: var(--gradient-primary);
+        .btn-view {
+            background: #3498db;
             color: white;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        .btn-view:hover {
+            background: #2980b9;
         }
 
-        .btn-secondary {
-            background: #f8f9fa;
+        .btn-edit {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #e67e22;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 1rem;
             color: #333;
-            border: 2px solid #e1e5e9;
         }
 
-        .btn-secondary:hover {
-            background: #e9ecef;
-            color: #333;
-        }
-
-        .alert {
-            padding: 1rem;
+        .empty-state .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
             border-radius: 12px;
-            margin-bottom: 1.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .empty-state .btn-primary:hover {
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .loading-indicator {
             display: none;
+            text-align: center;
+            padding: 2rem;
+            color: #666;
         }
 
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        .loading-indicator i {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 1rem;
         }
 
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 2rem;
+            border-top: 1px solid #e1e5e9;
         }
 
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e1e5e9;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .pagination button.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Modal para visualizar paciente */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 2% auto;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .patient-profile {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        .profile-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-group {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .info-group label {
+            font-weight: 600;
+            color: #333;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-group span {
+            color: #666;
         }
 
         /* Responsive */
@@ -176,14 +493,46 @@
                 padding: 1rem;
             }
 
-            .form-grid {
-                grid-template-columns: 1fr;
+            .patients-title {
+                flex-direction: column;
                 gap: 1rem;
             }
 
-            .form-actions {
+            .patients-filters {
                 flex-direction: column;
                 align-items: stretch;
+            }
+
+            .search-box {
+                min-width: auto;
+            }
+
+            .patient-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .patient-details {
+                grid-template-columns: 1fr;
+            }
+
+            .patient-actions {
+                justify-content: center;
+            }
+
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+                padding: 1rem;
+            }
+
+            .patient-profile {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .profile-info {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -206,16 +555,24 @@
                     Dashboard
                 </a>
                 <a href="pacientes.html" class="nav-link active">
-                    <i class="fas fa-user-plus"></i>
-                    Cadastro
+                    <i class="fas fa-users"></i>
+                    Pacientes
                 </a>
                 <a href="agendamentos.html" class="nav-link">
                     <i class="fas fa-calendar-alt"></i>
                     Agendamentos
                 </a>
+                <a href="pagamentos.html" class="nav-link">
+                    <i class="fas fa-money-bill-wave"></i>
+                    Pagamentos
+                </a>
                 <a href="prontuarios.html" class="nav-link">
                     <i class="fas fa-file-medical"></i>
                     Prontuários
+                </a>
+                <a href="novo_paciente.html" class="nav-link">
+                    <i class="fas fa-user-plus"></i>
+                    Novo Paciente
                 </a>
             </nav>
             <div class="user-section">
@@ -237,161 +594,95 @@
             <div class="patients-header">
                 <div class="patients-title">
                     <h1>
-                        <i class="fas fa-user-plus"></i>
-                        Cadastro de Pacientes
+                        <i class="fas fa-users"></i>
+                        Gerenciar Pacientes
                     </h1>
-                    <p class="subtitle">Registre novos pacientes no sistema mentePro</p>
+                    <a href="novo_paciente.html" class="add-patient-btn">
+                        <i class="fas fa-plus"></i>
+                        Novo Paciente
+                    </a>
+                </div>
+
+                <!-- Estatísticas -->
+                <div class="patients-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalPatients">0</div>
+                        <div class="stat-label">Total de Pacientes</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="activePatients">0</div>
+                        <div class="stat-label">Pacientes Ativos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="newThisMonth">0</div>
+                        <div class="stat-label">Novos este Mês</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="consultationsToday">0</div>
+                        <div class="stat-label">Consultas Hoje</div>
+                    </div>
+                </div>
+
+                <!-- Filtros e busca -->
+                <div class="patients-filters">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchPatients" placeholder="Buscar por nome, email ou telefone...">
+                    </div>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="all">Todos os Status</option>
+                        <option value="active">Ativos</option>
+                        <option value="inactive">Inativos</option>
+                    </select>
+                    <button id="exportBtn" class="export-btn">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </button>
                 </div>
             </div>
 
-            <!-- Alert para mensagens -->
-            <div id="alertMessage" class="alert">
-                <!-- Mensagens serão exibidas aqui -->
-            </div>
+            <!-- Lista de pacientes -->
+            <div class="patients-content">
+                <div class="loading-indicator" id="loadingIndicator">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Carregando pacientes...</p>
+                </div>
 
-            <!-- Formulário de cadastro -->
-            <div class="form-container">
-                <form id="patientForm">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="name">
-                                <i class="fas fa-user"></i>
-                                Nome Completo *
-                            </label>
-                            <input type="text" id="name" name="name" required placeholder="Digite o nome completo">
-                        </div>
+                <div class="patients-list" id="patientsList">
+                    <!-- Os pacientes serão carregados aqui via JavaScript -->
+                </div>
 
-                        <div class="form-group">
-                            <label for="email">
-                                <i class="fas fa-envelope"></i>
-                                E-mail *
-                            </label>
-                            <input type="email" id="email" name="email" required placeholder="exemplo@email.com">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="phone">
-                                <i class="fas fa-phone"></i>
-                                Telefone *
-                            </label>
-                            <input type="tel" id="phone" name="phone" required placeholder="(11) 99999-9999">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="birthDate">
-                                <i class="fas fa-calendar"></i>
-                                Data de Nascimento *
-                            </label>
-                            <input type="date" id="birthDate" name="birthDate" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="cpf">
-                                <i class="fas fa-id-card"></i>
-                                CPF
-                            </label>
-                            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="gender">
-                                <i class="fas fa-venus-mars"></i>
-                                Gênero
-                            </label>
-                            <select id="gender" name="gender">
-                                <option value="">Selecione</option>
-                                <option value="masculino">Masculino</option>
-                                <option value="feminino">Feminino</option>
-                                <option value="outro">Outro</option>
-                                <option value="nao_informado">Prefiro não informar</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="address">
-                                <i class="fas fa-map-marker-alt"></i>
-                                Endereço Completo
-                            </label>
-                            <input type="text" id="address" name="address" placeholder="Rua, número, bairro, cidade - UF">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="emergencyContact">
-                                <i class="fas fa-user-shield"></i>
-                                Contato de Emergência
-                            </label>
-                            <input type="text" id="emergencyContact" name="emergencyContact" placeholder="Nome do contato">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="emergencyPhone">
-                                <i class="fas fa-phone-alt"></i>
-                                Telefone de Emergência
-                            </label>
-                            <input type="tel" id="emergencyPhone" name="emergencyPhone" placeholder="(11) 99999-9999">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="profession">
-                                <i class="fas fa-briefcase"></i>
-                                Profissão
-                            </label>
-                            <input type="text" id="profession" name="profession" placeholder="Sua profissão">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="maritalStatus">
-                                <i class="fas fa-heart"></i>
-                                Estado Civil
-                            </label>
-                            <select id="maritalStatus" name="maritalStatus">
-                                <option value="">Selecione</option>
-                                <option value="solteiro">Solteiro(a)</option>
-                                <option value="casado">Casado(a)</option>
-                                <option value="divorciado">Divorciado(a)</option>
-                                <option value="viuvo">Viúvo(a)</option>
-                                <option value="uniao_estavel">União Estável</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="status">
-                                <i class="fas fa-toggle-on"></i>
-                                Status
-                            </label>
-                            <select id="status" name="status">
-                                <option value="active">Ativo</option>
-                                <option value="inactive">Inativo</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="notes">
-                                <i class="fas fa-sticky-note"></i>
-                                Observações
-                            </label>
-                            <textarea id="notes" name="notes" placeholder="Informações adicionais sobre o paciente..."></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn-primary" id="submitBtn">
-                            <i class="fas fa-save"></i>
-                            Cadastrar Paciente
-                        </button>
-                        <button type="button" class="btn-secondary" onclick="clearForm()">
-                            <i class="fas fa-times"></i>
-                            Limpar Formulário
-                        </button>
-                        <a href="dashboard.html" class="btn-secondary">
-                            <i class="fas fa-arrow-left"></i>
-                            Voltar ao Dashboard
-                        </a>
-                    </div>
-                </form>
+                <!-- Paginação -->
+                <div class="pagination" id="pagination" style="display: none;">
+                    <button id="prevPage" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Anterior
+                    </button>
+                    <span id="pageInfo">Página 1 de 1</span>
+                    <button id="nextPage" disabled>
+                        Próxima
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </main>
+
+    <!-- Modal para visualizar paciente -->
+    <div id="patientModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detalhes do Paciente</h2>
+                <button class="close-modal" onclick="closePatientModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div id="patientDetails">
+                <!-- Detalhes do paciente serão carregados aqui -->
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -433,235 +724,170 @@
                 }
             });
 
-            // Inicializar sistema de cadastro
-            initializePatientRegistration();
+            // Aguardar inicialização do PatientManager
+            const checkPatientManager = setInterval(() => {
+                if (window.patientManager) {
+                    clearInterval(checkPatientManager);
+                    console.log('PatientManager inicializado com sucesso');
+                }
+            }, 100);
         });
 
-        // Inicializar sistema de cadastro
-        function initializePatientRegistration() {
-            const form = document.getElementById('patientForm');
-            
-            // Configurar máscaras
-            setupInputMasks();
-            
-            // Configurar envio do formulário
-            form.addEventListener('submit', handleFormSubmit);
-        }
-
-        // Configurar máscaras para campos
-        function setupInputMasks() {
-            const phoneInputs = document.querySelectorAll('input[type="tel"]');
-            phoneInputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    let value = this.value.replace(/\D/g, '');
-                    if (value.length <= 11) {
-                        value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-                        if (value.length === 14) {
-                            this.value = value;
-                        } else if (value.length <= 10) {
-                            this.value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-                        }
-                    }
-                });
-            });
-
-            const cpfInput = document.getElementById('cpf');
-            if (cpfInput) {
-                cpfInput.addEventListener('input', function() {
-                    let value = this.value.replace(/\D/g, '');
-                    value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-                    this.value = value;
-                });
+        // Funções para o modal de paciente
+        function viewPatient(patientId) {
+            if (window.patientManager) {
+                showPatientModal(patientId);
             }
         }
 
-        // Manipular envio do formulário
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const originalText = submitBtn.innerHTML;
-            
-            try {
-                // Mostrar loading
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cadastrando...';
-                submitBtn.disabled = true;
+        function editPatient(patientId) {
+            // Redirecionar para página de edição com parâmetro
+            window.location.href = `novo_paciente.html?edit=${patientId}`;
+        }
 
-                // Coletar dados do formulário
-                const formData = collectFormData();
-                
-                // Validar dados
-                if (!validateFormData(formData)) {
-                    return;
-                }
+        function showPatientModal(patientId) {
+            const patient = window.patientManager.patients.find(p => p.id === patientId);
+            if (!patient) return;
 
-                // Salvar paciente
-                const success = await savePatient(formData);
-                
-                if (success) {
-                    showAlert('Paciente cadastrado com sucesso!', 'success');
-                    clearForm();
-                    
-                    // Opcional: redirecionar após alguns segundos
-                    setTimeout(() => {
-                        const redirect = confirm('Paciente cadastrado! Deseja ir para o dashboard?');
-                        if (redirect) {
-                            window.location.href = 'dashboard.html';
-                        }
-                    }, 2000);
-                } else {
-                    showAlert('Erro ao cadastrar paciente. Tente novamente.', 'error');
-                }
-            } catch (error) {
-                console.error('Erro no cadastro:', error);
-                showAlert('Erro inesperado. Tente novamente.', 'error');
-            } finally {
-                // Restaurar botão
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+            const modal = document.getElementById('patientModal');
+            const detailsContainer = document.getElementById('patientDetails');
+
+            const profileHTML = `
+                <div class="patient-profile">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info">
+                        <div class="info-group">
+                            <label>Nome Completo</label>
+                            <span>${patient.name}</span>
+                        </div>
+                        <div class="info-group">
+                            <label>E-mail</label>
+                            <span>${patient.email}</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Telefone</label>
+                            <span>${patient.phone}</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Data de Nascimento</label>
+                            <span>${formatDate(patient.birthDate)}</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Endereço</label>
+                            <span>${patient.address || 'Não informado'}</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Contato de Emergência</label>
+                            <span>${patient.emergencyContact || 'Não informado'}</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Telefone de Emergência</label>
+                            <span>${patient.emergencyPhone || 'Não informado'}</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Status</label>
+                            <span class="patient-status ${patient.status}">
+                                ${patient.status === 'active' ? 'Ativo' : 'Inativo'}
+                            </span>
+                        </div>
+                        <div class="info-group">
+                            <label>Data de Cadastro</label>
+                            <span>${formatDate(patient.createdAt)}</span>
+                        </div>
+                        <div class="info-group" style="grid-column: 1 / -1;">
+                            <label>Observações</label>
+                            <span>${patient.notes || 'Nenhuma observação registrada.'}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                    <button onclick="editPatient('${patient.id}')" class="btn-edit" style="padding: 1rem 2rem;">
+                        <i class="fas fa-edit"></i>
+                        Editar Paciente
+                    </button>
+                    <button onclick="closePatientModal()" class="btn-view" style="padding: 1rem 2rem;">
+                        <i class="fas fa-times"></i>
+                        Fechar
+                    </button>
+                </div>
+            `;
+
+            detailsContainer.innerHTML = profileHTML;
+            modal.style.display = 'block';
+        }
+
+        function closePatientModal() {
+            document.getElementById('patientModal').style.display = 'none';
+        }
+
+        function formatDate(date) {
+            if (!date) return 'N/A';
+            const d = new Date(date);
+            return d.toLocaleDateString('pt-BR');
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('patientModal');
+            if (event.target === modal) {
+                closePatientModal();
             }
         }
 
-        // Coletar dados do formulário
-        function collectFormData() {
-            const form = document.getElementById('patientForm');
-            const formData = new FormData(form);
-            const data = {};
-            
-            for (let [key, value] of formData.entries()) {
-                data[key] = value.trim();
+        // Função de exportação
+        function exportPatients() {
+            if (!window.patientManager || !window.patientManager.patients) {
+                alert('Nenhum dado para exportar.');
+                return;
             }
-            
-            // Adicionar timestamps
-            data.id = generatePatientId();
-            data.createdAt = new Date().toISOString();
-            data.updatedAt = new Date().toISOString();
-            
-            return data;
+
+            const patients = window.patientManager.patients;
+            const csvContent = generateCSV(patients);
+            downloadCSV(csvContent, 'pacientes_mentepro.csv');
         }
 
-        // Validar dados do formulário
-        function validateFormData(data) {
-            // Campos obrigatórios
-            const required = ['name', 'email', 'phone', 'birthDate'];
-            
-            for (let field of required) {
-                if (!data[field]) {
-                    showAlert(`Campo "${getFieldLabel(field)}" é obrigatório.`, 'error');
-                    document.getElementById(field).focus();
-                    return false;
-                }
-            }
-            
-            // Validar email
-            if (!isValidEmail(data.email)) {
-                showAlert('E-mail inválido.', 'error');
-                document.getElementById('email').focus();
-                return false;
-            }
-            
-            // Validar data de nascimento
-            if (!isValidBirthDate(data.birthDate)) {
-                showAlert('Data de nascimento inválida.', 'error');
-                document.getElementById('birthDate').focus();
-                return false;
-            }
-            
-            return true;
+        function generateCSV(patients) {
+            const headers = ['Nome', 'Email', 'Telefone', 'Data Nascimento', 'Endereço', 'Status', 'Data Cadastro'];
+            const rows = patients.map(patient => [
+                patient.name,
+                patient.email,
+                patient.phone,
+                formatDate(patient.birthDate),
+                patient.address || '',
+                patient.status === 'active' ? 'Ativo' : 'Inativo',
+                formatDate(patient.createdAt)
+            ]);
+
+            return [headers, ...rows]
+                .map(row => row.map(field => `"${field}"`).join(','))
+                .join('\n');
         }
 
-        // Salvar paciente
-        async function savePatient(patientData) {
-            try {
-                // Tentar salvar no Firebase se disponível
-                if (window.firebaseConfig && window.firebaseConfig.isInitialized) {
-                    console.log('Salvando no Firebase...');
-                    await window.firebaseConfig.addDocument('patients', patientData);
-                    return true;
-                } else {
-                    // Salvar localmente como fallback
-                    console.log('Firebase não disponível, salvando localmente...');
-                    savePatientLocally(patientData);
-                    return true;
-                }
-            } catch (error) {
-                console.error('Erro ao salvar paciente:', error);
-                // Em caso de erro, tentar salvar localmente
-                savePatientLocally(patientData);
-                return true;
+        function downloadCSV(content, filename) {
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
         }
 
-        // Salvar paciente localmente
-        function savePatientLocally(patientData) {
-            let patients = JSON.parse(localStorage.getItem('mentePro_patients') || '[]');
-            patients.push(patientData);
-            localStorage.setItem('mentePro_patients', JSON.stringify(patients));
-            console.log('Paciente salvo localmente:', patientData.name);
-        }
-
-        // Gerar ID único para o paciente
-        function generatePatientId() {
-            return 'patient_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        }
-
-        // Obter label do campo
-        function getFieldLabel(field) {
-            const labels = {
-                name: 'Nome Completo',
-                email: 'E-mail',
-                phone: 'Telefone',
-                birthDate: 'Data de Nascimento'
-            };
-            return labels[field] || field;
-        }
-
-        // Validar email
-        function isValidEmail(email) {
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return regex.test(email);
-        }
-
-        // Validar data de nascimento
-        function isValidBirthDate(birthDate) {
-            const date = new Date(birthDate);
-            const now = new Date();
-            const minDate = new Date(now.getFullYear() - 120, now.getMonth(), now.getDate());
-            
-            return date >= minDate && date <= now;
-        }
-
-        // Limpar formulário
-        function clearForm() {
-            document.getElementById('patientForm').reset();
-            hideAlert();
-        }
-
-        // Mostrar alerta
-        function showAlert(message, type = 'info') {
-            const alertElement = document.getElementById('alertMessage');
-            if (!alertElement) return;
-            
-            alertElement.textContent = message;
-            alertElement.className = `alert alert-${type}`;
-            alertElement.style.display = 'block';
-            
-            // Auto-hide após 5 segundos
-            setTimeout(() => {
-                hideAlert();
-            }, 5000);
-        }
-
-        // Esconder alerta
-        function hideAlert() {
-            const alertElement = document.getElementById('alertMessage');
-            if (alertElement) {
-                alertElement.style.display = 'none';
+        // Configurar exportação
+        document.addEventListener('DOMContentLoaded', function() {
+            const exportBtn = document.getElementById('exportBtn');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', exportPatients);
             }
-        }
-
-        // Criar função global para o clear button
-        window.clearForm = clearForm;
+        });
     </script>
 </body>
 </html>
