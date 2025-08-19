@@ -420,6 +420,9 @@
             alert('Digite a receita antes de imprimir.');
             return;
         }
+        // Personalização: logo e nome do profissional
+        const logoUrl = 'assets/logo.png';
+        const profissional = 'Dr(a). Nome do Profissional - CRM 000000'; // Edite conforme necessário
         const win = window.open('', '', 'width=700,height=600');
         win.document.write(`
             <html>
@@ -427,11 +430,39 @@
                 <title>Receita Médica</title>
                 <style>
                     body { font-family: Arial, sans-serif; margin: 40px; }
-                    h2 { text-align: center; }
-                    .prescription-box { border: 2px solid #333; border-radius: 10px; padding: 30px; margin-top: 30px; font-size: 1.2rem; }
+                    .header-print {
+                        display: flex;
+                        align-items: center;
+                        gap: 1.2rem;
+                        border-bottom: 2px solid #e5e7eb;
+                        padding-bottom: 1rem;
+                        margin-bottom: 1.5rem;
+                    }
+                    .header-print img {
+                        height: 60px;
+                    }
+                    .header-print .system-title {
+                        font-size: 2rem;
+                        font-weight: 800;
+                        color: #1e3a8a;
+                        letter-spacing: 1px;
+                    }
+                    .prof-name {
+                        font-size: 1.1rem;
+                        color: #222;
+                        margin-bottom: 1.5rem;
+                        text-align: right;
+                    }
+                    h2 { text-align: center; margin-bottom: 1.5rem; }
+                    .prescription-box { border: 2px solid #333; border-radius: 10px; padding: 30px; margin-top: 10px; font-size: 1.2rem; }
                 </style>
             </head>
             <body>
+                <div class="header-print">
+                    <img src="${logoUrl}" alt="Logo MentePro" />
+                    <span class="system-title">mentePro</span>
+                </div>
+                <div class="prof-name">${profissional}</div>
                 <h2>Receita Médica</h2>
                 <div class="prescription-box">
                     ${text.replace(/\n/g, '<br>')}
@@ -458,6 +489,9 @@
             alert('Digite o texto do atestado antes de imprimir.');
             return;
         }
+        // Personalização: logo e nome do profissional
+        const logoUrl = 'assets/logo.png';
+        const profissional = 'Dr(a). Nome do Profissional - CRM 000000'; // Edite conforme necessário
         const win = window.open('', '', 'width=700,height=600');
         win.document.write(`
             <html>
@@ -465,11 +499,39 @@
                 <title>Atestado</title>
                 <style>
                     body { font-family: Arial, sans-serif; margin: 40px; }
-                    h2 { text-align: center; }
-                    .certificate-box { border: 2px solid #333; border-radius: 10px; padding: 30px; margin-top: 30px; font-size: 1.2rem; }
+                    .header-print {
+                        display: flex;
+                        align-items: center;
+                        gap: 1.2rem;
+                        border-bottom: 2px solid #e5e7eb;
+                        padding-bottom: 1rem;
+                        margin-bottom: 1.5rem;
+                    }
+                    .header-print img {
+                        height: 60px;
+                    }
+                    .header-print .system-title {
+                        font-size: 2rem;
+                        font-weight: 800;
+                        color: #1e3a8a;
+                        letter-spacing: 1px;
+                    }
+                    .prof-name {
+                        font-size: 1.1rem;
+                        color: #222;
+                        margin-bottom: 1.5rem;
+                        text-align: right;
+                    }
+                    h2 { text-align: center; margin-bottom: 1.5rem; }
+                    .certificate-box { border: 2px solid #333; border-radius: 10px; padding: 30px; margin-top: 10px; font-size: 1.2rem; }
                 </style>
             </head>
             <body>
+                <div class="header-print">
+                    <img src="${logoUrl}" alt="Logo MentePro" />
+                    <span class="system-title">mentePro</span>
+                </div>
+                <div class="prof-name">${profissional}</div>
                 <h2>Atestado</h2>
                 <div class="certificate-box">
                     ${text.replace(/\n/g, '<br>')}
