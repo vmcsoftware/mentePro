@@ -457,10 +457,7 @@
                     </div>
                     <div class="stat-value" id="totalPatients">127</div>
                     <div class="stat-label">Total de Pacientes</div>
-                    <div class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>+12 este mês</span>
-                    </div>
+                    <div class="stat-change" id="patientsChange"></div>
                 </div>
 
                 <div class="stat-card appointments">
@@ -471,10 +468,7 @@
                     </div>
                     <div class="stat-value" id="totalAppointments">89</div>
                     <div class="stat-label">Consultas esta Semana</div>
-                    <div class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>+5% vs semana anterior</span>
-                    </div>
+                    <div class="stat-change" id="appointmentsChange"></div>
                 </div>
 
                 <div class="stat-card revenue">
@@ -485,10 +479,7 @@
                     </div>
                     <div class="stat-value" id="totalRevenue">R$ 45.800</div>
                     <div class="stat-label">Receita do Mês</div>
-                    <div class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>+8% vs mês anterior</span>
-                    </div>
+                    <div class="stat-change" id="revenueChange"></div>
                 </div>
 
                 <div class="stat-card satisfaction">
@@ -499,10 +490,7 @@
                     </div>
                     <div class="stat-value" id="satisfaction">4.8</div>
                     <div class="stat-label">Satisfação Média</div>
-                    <div class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>+0.2 pontos</span>
-                    </div>
+                    <div class="stat-change" id="satisfactionChange"></div>
                 </div>
             </div>
 
@@ -532,45 +520,7 @@
                         Atividades Recentes
                     </h3>
                     <div id="recentActivities">
-                        <div class="activity-item">
-                            <div class="activity-icon new-patient">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Novo paciente cadastrado</div>
-                                <div class="activity-time">Ana Silva - há 2 horas</div>
-                            </div>
-                        </div>
 
-                        <div class="activity-item">
-                            <div class="activity-icon appointment">
-                                <i class="fas fa-calendar-check"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Consulta confirmada</div>
-                                <div class="activity-time">João Santos - há 3 horas</div>
-                            </div>
-                        </div>
-
-                        <div class="activity-item">
-                            <div class="activity-icon session">
-                                <i class="fas fa-notes-medical"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Sessão concluída</div>
-                                <div class="activity-time">Maria Oliveira - há 4 horas</div>
-                            </div>
-                        </div>
-
-                        <div class="activity-item">
-                            <div class="activity-icon payment">
-                                <i class="fas fa-credit-card"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Pagamento recebido</div>
-                                <div class="activity-time">Carlos Silva - há 5 horas</div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -581,41 +531,7 @@
                         Próximas Consultas
                     </h3>
                     <div id="upcomingAppointments">
-                        <div class="appointment-item">
-                            <div class="appointment-time">09:00</div>
-                            <div class="appointment-details">
-                                <div class="appointment-patient">Pedro Silva</div>
-                                <div class="appointment-type">Terapia Cognitiva</div>
-                            </div>
-                            <div class="appointment-status confirmed">Confirmada</div>
-                        </div>
 
-                        <div class="appointment-item">
-                            <div class="appointment-time">10:30</div>
-                            <div class="appointment-details">
-                                <div class="appointment-patient">Ana Costa</div>
-                                <div class="appointment-type">Avaliação Inicial</div>
-                            </div>
-                            <div class="appointment-status pending">Pendente</div>
-                        </div>
-
-                        <div class="appointment-item">
-                            <div class="appointment-time">14:00</div>
-                            <div class="appointment-details">
-                                <div class="appointment-patient">João Santos</div>
-                                <div class="appointment-type">Terapia de Casal</div>
-                            </div>
-                            <div class="appointment-status confirmed">Confirmada</div>
-                        </div>
-
-                        <div class="appointment-item">
-                            <div class="appointment-time">15:30</div>
-                            <div class="appointment-details">
-                                <div class="appointment-patient">Maria Oliveira</div>
-                                <div class="appointment-type">Terapia Individual</div>
-                            </div>
-                            <div class="appointment-status confirmed">Confirmada</div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -725,92 +641,9 @@
         }
 
         function initializeCharts() {
-            // Gráfico de Consultas
-            const appointmentsCtx = document.getElementById('appointmentsChart').getContext('2d');
-            new Chart(appointmentsCtx, {
-                type: 'line',
-                data: {
-                    labels: ['1', '5', '10', '15', '20', '25', '30'],
-                    datasets: [{
-                        label: 'Consultas',
-                        data: [12, 19, 15, 25, 22, 30, 28],
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 2,
-                        pointHoverRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    elements: {
-                        line: {
-                            borderWidth: 2
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0,0,0,0.1)'
-                            },
-                            ticks: {
-                                font: { size: 10 }
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                font: { size: 10 }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Gráfico de Tipos de Terapia
-            const therapyCtx = document.getElementById('therapyTypesChart').getContext('2d');
-            new Chart(therapyCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Terapia Individual', 'Terapia de Casal', 'Terapia Familiar', 'Avaliação'],
-                    datasets: [{
-                        data: [45, 25, 20, 10],
-                        backgroundColor: [
-                            '#667eea',
-                            '#2ecc71',
-                            '#f39c12',
-                            '#e74c3c'
-                        ],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '65%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 10,
-                                usePointStyle: true,
-                                font: { size: 11 }
-                            }
-                        }
-                    }
-                }
-            });
+            // Os gráficos devem ser inicializados apenas com dados reais do banco
+            // Exemplo:
+            // fetchDadosDoBanco().then(dados => inicializarGraficosComDados(dados));
         }
 
         function updateDashboardData() {
