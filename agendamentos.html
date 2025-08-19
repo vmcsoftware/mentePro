@@ -62,15 +62,18 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="appointments-container">
+        <section class="appointments-section container">
             <!-- Page Header -->
-            <div class="page-header">
-                <h1 class="page-title">
-                    <i class="fas fa-calendar-alt"></i>
-                    Agendamentos
-                </h1>
-                <div class="header-actions">
-                    <div class="view-toggle">
+            <div class="page-header flex-between">
+                <div class="page-title-group">
+                    <h1 class="page-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        Agendamentos
+                    </h1>
+                    <span class="page-subtitle">Gerencie e visualize seus agendamentos de forma prática</span>
+                </div>
+                <div class="header-actions flex-gap">
+                    <div class="view-toggle btn-group">
                         <button class="view-btn active" id="calendarViewBtn">
                             <i class="fas fa-calendar"></i>
                             Calendário
@@ -93,7 +96,7 @@
 
             <!-- Statistics -->
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card shadow-sm">
                     <div class="stat-icon today">
                         <i class="fas fa-calendar-day"></i>
                     </div>
@@ -102,7 +105,7 @@
                         <p>Hoje</p>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card shadow-sm">
                     <div class="stat-icon week">
                         <i class="fas fa-calendar-week"></i>
                     </div>
@@ -111,7 +114,7 @@
                         <p>Esta Semana</p>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card shadow-sm">
                     <div class="stat-icon pending">
                         <i class="fas fa-clock"></i>
                     </div>
@@ -120,7 +123,7 @@
                         <p>Pendentes</p>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card shadow-sm">
                     <div class="stat-icon completed">
                         <i class="fas fa-check-circle"></i>
                     </div>
@@ -132,9 +135,9 @@
             </div>
 
             <!-- Calendar View -->
-            <div id="calendarView" class="calendar-container">
-                <div class="calendar-header">
-                    <div class="calendar-nav">
+            <div id="calendarView" class="calendar-container card shadow-md">
+                <div class="calendar-header flex-between">
+                    <div class="calendar-nav btn-group">
                         <button class="nav-btn" id="prevMonth">
                             <i class="fas fa-chevron-left"></i>
                         </button>
@@ -153,10 +156,10 @@
             </div>
 
             <!-- List View -->
-            <div id="listView" class="appointments-list" style="display: none;">
-                <div class="list-header">
+            <div id="listView" class="appointments-list card shadow-md" style="display: none;">
+                <div class="list-header flex-between">
                     <h3 class="list-title">Lista de Agendamentos</h3>
-                    <div class="filters">
+                    <div class="filters flex-gap">
                         <select class="filter-select" id="statusFilter">
                             <option value="">Todos os Status</option>
                             <option value="scheduled">Agendado</option>
@@ -174,22 +177,24 @@
                         </select>
                     </div>
                 </div>
-                <table class="appointments-table">
-                    <thead class="table-header">
-                        <tr>
-                            <th>Paciente</th>
-                            <th>Data & Hora</th>
-                            <th>Tipo</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="appointmentsTableBody">
-                        <!-- Appointments will be loaded here -->
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="appointments-table">
+                        <thead class="table-header">
+                            <tr>
+                                <th>Paciente</th>
+                                <th>Data & Hora</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsTableBody">
+                            <!-- Appointments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </section>
     </main>
 
     <!-- Modal para Novo/Editar Agendamento -->
